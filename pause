@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+read -n1 -r -p "Press any key to exit..." key
