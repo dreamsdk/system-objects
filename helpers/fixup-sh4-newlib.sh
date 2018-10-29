@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-# You can change this if needed.
-export toolchains_base=/opt/toolchains/dc
+if [ -z "$toolchains_base" ]; then
+  echo "fatal: \$toolchain_base is undefined!";
+  exit;
+fi
 
 # Please don't change this.
-export kos_base=$toolchains_base/kos
-export newlib_inc=$toolchains_base/sh-elf/sh-elf/include
+kos_base=$toolchains_base/kos
+newlib_inc=$toolchains_base/sh-elf/sh-elf/include
 
 while [ "$1" != "" ]; do
     PARAM=`echo $1 | awk -F= '{print $1}'`
