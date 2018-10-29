@@ -1,5 +1,6 @@
---- kos-ports/config.mk	2018-10-29 12:04:29 +0000
-+++ kos-ports/config.mk.dcsdk	2018-10-29 16:12:51 +0000
+diff -ruN kos-ports/config.mk kos-ports-dcsdk/config.mk
+--- kos-ports/config.mk	2018-10-29 20:16:48 +0000
++++ kos-ports-dcsdk/config.mk	2018-10-29 21:55:16 +0000
 @@ -1,7 +1,7 @@
  # Select how to download files inside the kos-ports tree. Examples are given for
  # cURL and wget.
