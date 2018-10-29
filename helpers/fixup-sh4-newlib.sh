@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
 
-echo "Fixup Hitachi SH-4 Newlib..."
-
 # You can change this if needed.
 export toolchains_base=/opt/toolchains/dc
 
 # Please don't change this.
 export kos_base=$toolchains_base/kos
 export newlib_inc=$toolchains_base/sh-elf/sh-elf/include
+
+while [ "$1" != "" ]; do
+    PARAM=`echo $1 | awk -F= '{print $1}'`
+    case $PARAM in
+        --verbose)
+			VERBOSE=1
+            ;;
+        *)
+            echo "ERROR: unknown parameter \"$PARAM\""
+            exit 1
+            ;;
+    esac
+    shift
+done
 
 # In original dc-chain Makefile, the instructions below are symbolic links.
 # But the "ln" tool under MinGW is not working properly.
@@ -23,4 +35,6 @@ cp $kos_base/include/pthread.h $newlib_inc
 cp $kos_base/include/sys/_pthread.h $newlib_inc/sys
 cp $kos_base/include/sys/sched.h $newlib_inc/sys
 
-echo "Done!"
+if [ -n "$VERBOSE" ]; then
+    echo "Done!";
+fi
