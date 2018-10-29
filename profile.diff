@@ -1,6 +1,6 @@
---- profile	2009-07-11 18:34:34 +0000
-+++ profile.dcsdk	2018-10-25 22:32:48 +0000
-@@ -56,5 +56,35 @@
+--- /etc/profile	2009-07-11 18:34:34 +0000
++++ /etc/profile.dcsdk	2018-10-29 09:28:43 +0000
+@@ -56,5 +56,36 @@
  
  alias clear=clsb
  
@@ -16,7 +16,10 @@
 +export LANG=en
 +
 +# Initialize KallistiOS
-+source $DCSDK_BASE/kos/environ.sh
++environ=$DCSDK_BASE/kos/environ.sh
++if [ -f ${environ} ]; then
++  source ${environ}
++fi
 +
 +# Add additional items in the PATH
 +export PATH="${PATH}:/opt/upx/:${DCSDK_BASE}/mingw/"
@@ -24,8 +27,6 @@
 +# By default, MSYS is always switching to the home directory.
 +# We don't want this, as we will allow to open a shell in a specific folder and
 +# run some commands from there directly from the prompt.
-+# This is caused by the --login switch, but we need to execute commands stored
-+# in this file. And it smoothly works like this so...
 +if [ -z "$_EXTERNAL_COMMAND" ]; then
 +  # Default usage (as normal MSYS instance)
 +  cd "$HOME"
