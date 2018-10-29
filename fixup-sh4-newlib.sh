@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "Fixup Hitachi SH-4 Newlib..."
+
 # You can change this if needed.
 export toolchains_base=/opt/toolchains/dc
 
@@ -20,3 +22,5 @@ cp -r $kos_base/kernel/arch/dreamcast/include/dc $newlib_inc
 cp $kos_base/include/pthread.h $newlib_inc
 cp $kos_base/include/sys/_pthread.h $newlib_inc/sys
 cp $kos_base/include/sys/sched.h $newlib_inc/sys
+
+echo "Done!"
