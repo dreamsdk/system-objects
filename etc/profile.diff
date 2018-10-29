@@ -1,5 +1,5 @@
---- /etc/profile	2009-07-11 18:34:34 +0000
-+++ /etc/profile.dcsdk	2018-10-29 17:51:45 +0000
+--- profile	2009-07-11 18:34:34 +0000
++++ profile.dcsdk	2018-10-29 20:18:15 +0000
 @@ -56,5 +56,36 @@
  
  alias clear=clsb
@@ -16,7 +16,7 @@
 +export LANG=en
 +
 +# Initialize KallistiOS
-+environ=$DCSDK_BASE/kos/environ.sh
++environ=$toolchains_base/kos/environ.sh
 +if [ -f ${environ} ]; then
 +  source ${environ}
 +fi
