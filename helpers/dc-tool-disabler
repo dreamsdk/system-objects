@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+printf "dc-tool is not configured. Please run the DreamSDK Manager to set it up.\n"
