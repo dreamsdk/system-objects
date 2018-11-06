@@ -5,7 +5,7 @@ if [ -z "$toolchains_base" ]; then
   exit;
 fi
 
-dreamcast_tool_kind=$(awk -F "=" '/DreamcastToolKind/ {print $2}' ${dreamsdk_conf})
+dreamcast_tool_kind=$(awk -F "=" '/Kind/ {print $2}' ${dreamsdk_conf})
 
 dreamcast_tool_not_configured() {
   printf "Dreamcast Tool (dc-tool) is not configured.\n"

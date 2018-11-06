@@ -1,28 +1,36 @@
 --- profile	2009-07-11 18:34:34 +0000
-+++ profile.dcsdk	2018-10-29 20:18:15 +0000
-@@ -56,5 +56,36 @@
++++ profile.dcsdk	2018-11-06 10:24:51 +0000
+@@ -56,5 +56,47 @@
  
  alias clear=clsb
  
 -cd "$HOME"
 +#cd "$HOME"
  
-+# --- DreamSDK Additions ---
++### DreamSDK ###################################################################
 +
-+# Toolchain base directory
++# Toolchains base directory
 +export toolchains_base=/opt/toolchains/dc
 +
-+# Force GNU compilers to be in English language
++# DreamSDK base directory
++export dreamsdk_base=/opt/dreamsdk
++
++# DreamSDK configuration file
++export dreamsdk_conf=/etc/dreamsdk/dreamsdk.conf
++
++# Force GNU compilers messages in English language
++# This avoid some encoding problems in the console.
 +export LANG=en
 +
 +# Initialize KallistiOS
 +environ=$toolchains_base/kos/environ.sh
 +if [ -f ${environ} ]; then
 +  source ${environ}
++  export kos_setup=1
 +fi
 +
 +# Add additional items in the PATH
-+export PATH="${PATH}:/opt/dcsdk/helpers/"
++export PATH="${PATH}:${dreamsdk_base}/scripts/"
 +
 +# By default, MSYS is always switching to the home directory.
 +# We don't want this, as we will allow to open a shell in a specific folder and
@@ -30,8 +38,11 @@
 +if [ -z "$_EXTERNAL_COMMAND" ]; then
 +  # Default usage (as normal MSYS instance)
 +  cd "$HOME"
++  
++  # Display version
++  dreamsdk-version  
 +else
-+  # Command passed to the dcsdk-launcher
++  # Command passed to the launcher
 +  $_EXTERNAL_COMMAND
 +  if [ -z "$_AUTOMATED_CALL" ]; then
 +    pause
