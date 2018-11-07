@@ -1,5 +1,5 @@
 --- profile	2009-07-11 18:34:34 +0000
-+++ profile.dcsdk	2018-11-07 10:51:37 +0000
++++ profile.dcsdk	2018-11-07 14:01:08 +0000
 @@ -56,5 +56,50 @@
  
  alias clear=clsb
@@ -47,7 +47,7 @@
 +else
 +  # Command passed to the launcher
 +  $_EXTERNAL_COMMAND
-+  if [ "$_AUTOMATED_CALL" -eq 1 ]; then
++  if [ "$_AUTOMATED_CALL" -eq 0 ]; then
 +    pause
 +  fi
 +  logout
