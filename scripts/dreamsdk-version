@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+if [ -z "$dreamsdk_base" ]; then
+  echo "fatal: \$dreamsdk_base is undefined!";
+  exit;
+fi
+
 dreamsdk_version_file=${dreamsdk_base}/VERSION
 dreamsdk_release=$(awk -F "=" '/Release/ {print $2}' ${dreamsdk_version_file})
 dreamsdk_date=$(awk -F "=" '/Date/ {print $2}' ${dreamsdk_version_file})
 
 # Display DreamSDK welcome messages
-if [ -z ${kos_setup} ]; then
+if [ ${kos_initialized} -eq 0 ]; then
   echo "KallistiOS is not installed."
   echo "Please run DreamSDK Manager to set-up everything."
   echo "Enter dreamsdk-manager at the command prompt to do that."

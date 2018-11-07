@@ -5,11 +5,18 @@ if [ -z "$toolchains_base" ]; then
   exit;
 fi
 
+# Refresh configuration
+if [ -f ${environ} ]; then
+  source ${environ}  
+fi
+
+# Get the right dc-tool executable
 dreamcast_tool_kind=$(awk -F "=" '/Kind/ {print $2}' ${dreamsdk_conf})
 
 dreamcast_tool_not_configured() {
-  printf "Dreamcast Tool (dc-tool) is not configured.\n"
-  printf "Please run the DreamSDK Manager utility to set it up.\n"
+  echo "Dreamcast Tool (dc-tool) is not configured."
+  echo "Please run the DreamSDK Manager utility to set it up."
+  echo "Enter dreamsdk-manager at the command prompt to do that."  
   exit 1
 }
 
