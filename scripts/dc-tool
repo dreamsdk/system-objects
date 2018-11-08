@@ -5,11 +5,6 @@ if [ -z "$toolchains_base" ]; then
   exit;
 fi
 
-# Refresh configuration
-if [ -f ${environ} ]; then
-  source ${environ}  
-fi
-
 # Get the right dc-tool executable
 dreamcast_tool_kind=$(awk -F "=" '/Kind/ {print $2}' ${dreamsdk_conf})
 
@@ -20,7 +15,12 @@ dreamcast_tool_not_configured() {
   exit 1
 }
 
-dreamcast_tool=
+# Parameters are filled by DreamSDK Manager
+# Don't manually modify this!
+dreamcast_tool_parameters="-t COM2 -b 115200 -n -q"
+
+# Get the dc-tool executable filename to use
+dreamcast_tool=""
 case ${dreamcast_tool_kind} in
   0) dreamcast_tool_not_configured;; 
   1) dreamcast_tool="dc-tool-ser";;
@@ -28,4 +28,4 @@ case ${dreamcast_tool_kind} in
   *) dreamcast_tool_not_configured;;
 esac
 
-${dreamcast_tool} $*
+${dreamcast_tool} ${dreamcast_tool_parameters} $*
