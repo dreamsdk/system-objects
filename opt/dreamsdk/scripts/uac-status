@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+uac_enabled=$(REG QUERY HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\ //v EnableLUA | grep 0x1)
+
+uac=0
+if [ "$uac_enabled" ]; then
+  uac=1
+fi
+
+echo $uac

@@ -5,8 +5,9 @@ if [ -z "$toolchains_base" ]; then
   exit;
 fi
 
-# Get the right dc-tool executable
+# Get dc-tool parameters
 dreamcast_tool_kind=$(awk -F "=" '/Kind/ {print $2}' ${dreamsdk_conf})
+dreamcast_tool_parameters=$(awk -F "=" '/CommandLine/ {print $2}' ${dctool_conf})
 
 dreamcast_tool_not_configured() {
   echo "Dreamcast Tool (dc-tool) is not configured."
@@ -14,10 +15,6 @@ dreamcast_tool_not_configured() {
   echo "Enter dreamsdk-manager at the command prompt to do that."  
   exit 1
 }
-
-# Parameters are filled by DreamSDK Manager
-# Don't manually modify this!
-dreamcast_tool_parameters="-t COM2 -b 115200 -n -q"
 
 # Get the dc-tool executable filename to use
 dreamcast_tool=""
@@ -28,4 +25,25 @@ case ${dreamcast_tool_kind} in
   *) dreamcast_tool_not_configured;;
 esac
 
+# Call arp if needed
+dreamcast_ip=$(awk -F "=" '/InternetProtocolAddress/ {print $2}' ${dctool_conf})
+dreamcast_mac=$(awk -F "=" '/MediaAccessControlAddress/ {print $2}' ${dctool_conf})
+use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2}' ${dctool_conf})
+
+arp_cmd="arp -s ${dreamcast_ip} ${dreamcast_mac}"
+
+if [ "$use_arp" == "1" ]; then
+  ping_ttl=$(ping ${dreamcast_ip} -n 1 | grep "TTL")
+  if [ -z "$ping_ttl" ]; then
+    is_uac_enabled=$(uac-status)
+	if [ "$is_uac_enabled" == "1" ]; then	  
+	  echo "Please confirm UAC to allow the ARP entry addition..."
+	  elevate -c -w ${arp_cmd}
+	else
+	  ${arp_cmd}
+	fi
+  fi
+fi
+
+# Execute the real dc-tool command!
 ${dreamcast_tool} ${dreamcast_tool_parameters} $*
