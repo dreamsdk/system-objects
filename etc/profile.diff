@@ -1,5 +1,5 @@
 --- profile	2009-07-11 18:34:34 +0000
-+++ profile.dreamsdk	2019-01-02 12:32:54 +0000
++++ profile.dreamsdk	2019-01-02 18:11:49 +0000
 @@ -56,5 +56,51 @@
  
  alias clear=clsb
@@ -50,6 +50,6 @@
 +else
 +  # Command passed to the launcher
 +  $_EXTERNAL_COMMAND
-+  export _EXITCODE=$?
++  echo $? > $_EXITCODE
 +  logout
 +fi
