@@ -33,7 +33,7 @@ use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2}' ${dctool_conf})
 arp_cmd="arp -s ${dreamcast_ip} ${dreamcast_mac}"
 
 if [ "$use_arp" == "1" ]; then
-  ping_ttl=$(ping ${dreamcast_ip} -n 1 | grep "TTL")
+  ping_ttl=$(ping ${dreamcast_ip} -n 4 | grep "TTL")
   if [ -z "$ping_ttl" ]; then
     is_uac_enabled=$(uac-status)
 	if [ "$is_uac_enabled" == "1" ]; then	  

@@ -5,9 +5,11 @@ set Title=Dreamcast Tool
 title %Title%
 
 rem Initial configuration
-set DreamcastToolPath=..\..\toolchains\dc\bin
-set ConfigurationFile=..\..\..\etc\dreamsdk\dc-tool.conf
-set Elevate=..\..\elevate\elevate.exe
+set ScriptPath=%~dp0
+set ScriptPath=%ScriptPath:~0,-1%
+set DreamcastToolPath=%ScriptPath%\..\..\toolchains\dc\bin
+set ConfigurationFile=%ScriptPath%\..\..\..\etc\dreamsdk\dc-tool.conf
+set Elevate=%ScriptPath%\..\..\elevate\elevate.exe
 
 rem Read Configuration
 for /F "tokens=*" %%i in (%ConfigurationFile%) do (
@@ -31,13 +33,17 @@ goto run_loader
 
 :check_connectivity
 set hardware_reachable=0
-ping %InternetProtocolAddress% -n 1 | (find "TTL") && (set hardware_reachable=1)
+for /f "tokens=1" %%a in ('ping %InternetProtocolAddress% -n 4 ^| find "TTL"') do (
+set hardware_reachable=1
+)
 if "%hardware_reachable%"=="0" goto check_uac_status
 goto run_loader
 
 :check_uac_status
 set is_uac_enabled=0
-reg query HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLUA 2> nul | (find "0x1" > nul) && (set is_uac_enabled=1)
+for /f "tokens=1" %%a in ('reg query HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLUA 2^> nul ^| find "0x1"') do (
+set is_uac_enabled=1
+)
 if "%is_uac_enabled%"=="1" goto exec_arp_uac
 goto exec_arp
 
