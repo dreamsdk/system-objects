@@ -6,8 +6,12 @@ if [ -z "$toolchains_base" ]; then
 fi
 
 # Get dc-tool parameters
-dreamcast_tool_kind=$(awk -F "=" '/Kind/ {print $2}' ${dreamsdk_conf})
-dreamcast_tool_parameters=$(awk -F "=" '/CommandLine/ {print $2}' ${dctool_conf})
+kind=$(awk -F "=" '/Kind/ {print $2}' ${dctool_conf})
+executable=$(awk -F "=" '/Executable/ {print $2}' ${dctool_conf})
+commandline=$(awk -F "=" '/CommandLine/ {print $2}' ${dctool_conf})
+dreamcast_ip=$(awk -F "=" '/InternetProtocolAddress/ {print $2}' ${dctool_conf})
+dreamcast_mac=$(awk -F "=" '/MediaAccessControlAddress/ {print $2}' ${dctool_conf})
+use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2}' ${dctool_conf})
 
 dreamcast_tool_not_configured() {
   echo "Dreamcast Tool (dc-tool) is not configured."
@@ -16,34 +20,26 @@ dreamcast_tool_not_configured() {
   exit 1
 }
 
-# Get the dc-tool executable filename to use
-dreamcast_tool=""
-case ${dreamcast_tool_kind} in
-  0) dreamcast_tool_not_configured;; 
-  1) dreamcast_tool="dc-tool-ser";;
-  2) dreamcast_tool="dc-tool-ip";;
-  *) dreamcast_tool_not_configured;;
-esac
+# check the executable presence and the good configuration
+is_executable_exists=$(command -v $executable)
+if [ "$kind" == "0" ] || [ -z "$is_executable_exists" ]; then
+  dreamcast_tool_not_configured
+fi
 
-# Call arp if needed
-dreamcast_ip=$(awk -F "=" '/InternetProtocolAddress/ {print $2}' ${dctool_conf})
-dreamcast_mac=$(awk -F "=" '/MediaAccessControlAddress/ {print $2}' ${dctool_conf})
-use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2}' ${dctool_conf})
-
-arp_cmd="arp -s ${dreamcast_ip} ${dreamcast_mac}"
-
-if [ "$use_arp" == "1" ]; then
-  ping_ttl=$(ping ${dreamcast_ip} -n 4 | grep "TTL")
+# Handle arp
+if [ "$kind" == "2" ] && [ "$use_arp" == "1" ]; then  
+  arp_cmd="arp -s ${dreamcast_ip} ${dreamcast_mac}"
+  ping_ttl=$(ping ${dreamcast_ip} -n 1 | grep "TTL")
   if [ -z "$ping_ttl" ]; then
     is_uac_enabled=$(uac-status)
-	if [ "$is_uac_enabled" == "1" ]; then	  
-	  echo "Please confirm UAC to allow the ARP entry addition..."
-	  elevate -c -w ${arp_cmd}
-	else
-	  ${arp_cmd}
-	fi
+    if [ "$is_uac_enabled" == "1" ]; then    
+      echo "Please confirm UAC to allow the ARP entry addition..."
+      elevate -c -w ${arp_cmd}
+    else
+      ${arp_cmd}
+    fi
   fi
 fi
 
-# Execute the real dc-tool command!
-${dreamcast_tool} ${dreamcast_tool_parameters} $*
+# run the loader!
+${executable} ${commandline} $*

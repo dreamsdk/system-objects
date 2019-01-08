@@ -17,13 +17,21 @@ for /F "tokens=*" %%i in (%ConfigurationFile%) do (
 )
 
 rem Sanitize configuration entries
+call :trim Kind
 call :trim Executable
 call :trim CommandLine
 call :trim MediaAccessControlEnabled
 call :trim InternetProtocolAddress
 call :trim MediaAccessControlAddress
 
+rem Loader is undefined in the options
+if "%Kind%"=="0" goto loader_undefined
+
+rem This is a custom command...
+if "%Kind%"=="3" goto run_loader_custom
+
 rem Compute the real Dreamcast Tool filename location
+rem In case of Serial/IP (Kind=1 or 2)
 set DreamcastTool=%DreamcastToolPath%\%Executable%.exe
 if not exist %DreamcastTool% goto loader_undefined
 
@@ -58,6 +66,10 @@ goto run_loader
 
 :run_loader
 %DreamcastTool% %CommandLine% %*
+goto end
+
+:run_loader_custom
+%Executable% %CommandLine% %*
 goto end
 
 :loader_undefined
