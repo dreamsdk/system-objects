@@ -15,7 +15,7 @@ if not exist %ProjectPath% goto error_params
 
 set ObjectPath=%ProjectPath%\%2
 if "%ObjectPath%"=="" goto error_params
-if not exist %ObjectPath% goto error_params
+if not exist %ObjectPath% mkdir %ObjectPath%
 
 set RomdiskImage=%RomdiskName%.img
 set RomdiskObject=%RomdiskName%.o
