@@ -1,6 +1,6 @@
 --- profile	2009-07-11 18:34:34 +0000
-+++ profile.dreamsdk	2019-01-09 09:04:37 +0000
-@@ -56,5 +56,53 @@
++++ profile.dreamsdk	2019-02-01 10:18:15 +0000
+@@ -56,5 +56,60 @@
  
  alias clear=clsb
  
@@ -38,12 +38,19 @@
 +  export kos_initialized=1	  
 +fi
 +
++# Change to the passed directory if needed...
++if [ -n "$_WORKING_DIRECTORY" ]; then
++  cd "$_WORKING_DIRECTORY"  
++fi
++
 +# By default, MSYS is always switching to the home directory.
 +# We don't want this, as we will allow to open a shell in a specific folder and
 +# run some commands from there directly from the prompt.
 +if [ -z "$_EXTERNAL_COMMAND" ]; then
 +  # Default usage (as normal MSYS instance)
-+  cd "$HOME"
++  if [ -z "$_WORKING_DIRECTORY" ]; then    
++    cd "$HOME"
++  fi
 +  
 +  # Display version and banner
 +  dreamsdk-version  
