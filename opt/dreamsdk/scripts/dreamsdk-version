@@ -20,5 +20,5 @@ else
   echo " / // / __/ -_) _ \`/  ' \_\ \/ // /  ,<   ";
   echo "/____/_/  \__/\_,_/_/_/_/___/____/_/|_|  ";
   echo "                                         ";
-  echo "DreamSDK Release ${dreamsdk_release} - Built on ${dreamsdk_date}"
+  echo "DreamSDK ${dreamsdk_release} - Built on ${dreamsdk_date}"
 fi
