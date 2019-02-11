@@ -13,4 +13,5 @@ if [ -z "$destination" ]; then
   destination="${source%.*}.bin"
 fi
 
+kos-strip $source
 kos-objcopy -O binary $source $destination
