@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 
 me=`basename "$0"`
- 
+
+test_component () {
+  _output_temp=$(command -v $1)
+  if [ -z "$_output_temp" ]; then
+    echo "$me: error: $1 is not available, install it or reinstall DreamSDK"
+    exit 7
+  fi
+}
+
+test_component "mkisofs"
+
 target_file=$1
 source_dir=$2
 bootstrap=$3
@@ -69,13 +79,13 @@ fi
 
 # Check input files/directories
 if [ ! -d "$source_dir" ] || [ ! -f "$bootstrap" ]; then
-  echo "$me: error: source_dir and/or bootstrap doesn't exist";
+  echo "$me: error: source_dir and/or bootstrap does not exist";
   exit 3
 fi
 
 # Detect the 1ST_READ.BIN file.
 if [ ! -f "$source_dir/1ST_READ.BIN" ]; then
-  echo "$me: error: 1ST_READ.BIN doesn't exists in source_dir"
+  echo "$me: error: 1ST_READ.BIN does not exists in source_dir"
   exit 4
 fi
 
@@ -98,17 +108,16 @@ mkisofs ${msinfo} -V "${volume_name}" -G "${bootstrap}" -joliet -rock -l -o "${i
 
 # Error when generating the ISO!
 if [ ! -f "$isofile" ]; then
-  echo "$me: error: unable to generate the ISO9660 file"
+  echo "$me: error: unable to generate the ISO9660 image"
   exit 6
 fi 
 
-echo mds4dc ${mds_switch} ${target_file} ${isofile}
-echo cdi4dc ${isofile} ${target_file} ${cdi_switch}
-
 # Generate the image!
-if [ $is_mds -eq 1 ]; then		
+if [ $is_mds -eq 1 ]; then
+  test_component mds4dc	
   mds4dc ${mds_switch} ${target_file} ${isofile}
 else
+  test_component cdi4dc
   cdi4dc ${isofile} ${target_file} ${cdi_switch}
 fi
 
@@ -119,4 +128,4 @@ fi
 
 #done!
 echo ""
-echo Your image is done.
+echo Your disc image is now ready.
