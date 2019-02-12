@@ -10,6 +10,7 @@ set ScriptPath=%ScriptPath:~0,-1%
 set DreamcastToolPath=%ScriptPath%\..\..\toolchains\dc\bin
 set ConfigurationFile=%ScriptPath%\..\..\..\etc\dreamsdk\dc-tool.conf
 set Elevate=%ScriptPath%\..\..\elevate\elevate.exe
+set FastPing=%ScriptPath%\..\helpers\fastping.exe
 
 rem Read Configuration
 for /F "tokens=*" %%i in (%ConfigurationFile%) do (
@@ -40,11 +41,8 @@ if "%MediaAccessControlEnabled%"=="1" goto check_connectivity
 goto run_loader
 
 :check_connectivity
-set hardware_reachable=0
-for /f "tokens=1" %%a in ('ping %InternetProtocolAddress% -n 4 ^| find "TTL"') do (
-set hardware_reachable=1
-)
-if "%hardware_reachable%"=="0" goto check_uac_status
+%FastPing% %InternetProtocolAddress%
+if not errorlevel 0 goto check_uac_status
 goto run_loader
 
 :check_uac_status

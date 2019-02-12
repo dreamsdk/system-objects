@@ -29,8 +29,8 @@ fi
 # Handle arp
 if [ "$kind" == "2" ] && [ "$use_arp" == "1" ]; then  
   arp_cmd="arp -s ${dreamcast_ip} ${dreamcast_mac}"
-  ping_ttl=$(ping ${dreamcast_ip} -n 1 | grep "TTL")
-  if [ -z "$ping_ttl" ]; then
+  fastping ${dreamcast_ip}
+  if [ $? -ne 0 ]; then
     is_uac_enabled=$(uac-status)
     if [ "$is_uac_enabled" == "1" ]; then    
       echo "Please confirm UAC to allow the ARP entry addition..."

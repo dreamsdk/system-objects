@@ -1,6 +1,6 @@
 --- profile	2009-07-11 18:34:34 +0000
-+++ profile.dreamsdk	2019-02-01 10:18:15 +0000
-@@ -56,5 +56,60 @@
++++ profile.dreamsdk	2019-02-12 08:49:38 +0000
+@@ -56,5 +56,68 @@
  
  alias clear=clsb
  
@@ -15,6 +15,9 @@
 +# KallistiOS initialization script
 +export environ=$toolchains_base/kos/environ.sh
 +
++# KallistiOS utilities directory
++export kos_utilities=$toolchains_base/kos/utils
++
 +# DreamSDK base directory
 +export dreamsdk_base=/opt/dreamsdk
 +
@@ -25,7 +28,7 @@
 +export dctool_conf=/etc/dreamsdk/dc-tool.conf
 +
 +# Add additional items in the PATH
-+export PATH="${PATH}:${dreamsdk_base}/scripts/:/opt/elevate/"
++export PATH="${PATH}:${dreamsdk_base}/helpers/:${dreamsdk_base}/scripts/:${dreamsdk_base}/addons/:/opt/elevate/"
 +
 +# Force GNU compilers messages in English language
 +# This avoid some encoding problems in the console.
@@ -36,6 +39,11 @@
 +if [ -f ${environ} ]; then
 +  source ${environ}
 +  export kos_initialized=1	  
++fi
++
++# Add additional KallistiOS utilities in PATH if possible
++if [ $kos_initialized -eq 1 ]; then
++  export PATH="${PATH}:${kos_utilities}/bin2c:${kos_utilities}/bin2o:${kos_utilities}/dcbumpgen:${kos_utilities}/genexports:${kos_utilities}/genromfs:${kos_utilities}/kmgenc:${kos_utilities}/scramble:${kos_utilities}/vqenc:${kos_utilities}/wav2adpcm"
 +fi
 +
 +# Change to the passed directory if needed...
