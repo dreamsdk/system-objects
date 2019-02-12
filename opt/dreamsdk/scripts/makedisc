@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+
+me=`basename "$0"`
+ 
+target_file=$1
+source_dir=$2
+bootstrap=$3
+volume_name=$4
+image_type=$5
+
+if [ -z "$target_file" ] || [ -z "$source_dir" ] || [ -z "$bootstrap" ]; then 
+  echo "usage:"
+  echo "  $me <target_file> <source_dir> <bootstrap> [volume_name] [image_type]";
+  echo ""
+  echo "parameters:"
+  echo "  target_file  : the target output file, should be a '.cdi' or a '.mds' file"
+  echo "  source_dir   : the directory where are stored the files, i.e. at least "
+  echo "                 the 1ST_READ.BIN"
+  echo "  bootstrap    : the full path to the bootstrap file, i.e. the IP.BIN file"
+  echo "  volume_name  : the disc label (without spaces)"
+  echo "  image_type   : optional, indicates if you want an audio/data (--audio)"
+  echo "                 or a data/data (--data) image (default is audio/data)"
+  echo "example:"
+  echo "  $me output.cdi ./data ./IP.BIN MY_LITTLE_PROG --audio"  
+  exit 1
+fi
+
+# Optional parameter: Volume Name
+if [ -z "$volume_name" ]; then
+  volume_name="DREAMSDK"
+fi
+
+# Optional parameter: Image Type
+if [ -z "$image_type" ]; then
+  image_type="--audio"
+fi
+
+# Determine the engine to run
+engine="${target_file##*.}"
+
+is_cdi=0
+is_mds=0
+shopt -s nocasematch
+case $engine in
+  cdi ) is_cdi=1;;
+  mds ) is_mds=1;;
+esac
+
+# We don't know what kind of image to generate!
+if [ $is_cdi -eq 0 ] && [ $is_mds -eq 0 ]; then
+  echo "$me: error: image format not recognized"
+  exit 2
+fi
+
+# Set the correct image format
+is_audio_data=0
+is_data_data=0
+shopt -s nocasematch
+case $image_type in
+  --audio ) is_audio_data=1;;
+  --data ) is_data_data=1;;
+esac
+
+# We don't know if the thing to do is audio/data or data/data
+if [ $is_audio_data -eq 0 ] && [ $is_data_data -eq 0 ]; then
+  echo "$me: error: image type not recognized"
+  exit 5
+fi
+
+# Check input files/directories
+if [ ! -d "$source_dir" ] || [ ! -f "$bootstrap" ]; then
+  echo "$me: error: source_dir and/or bootstrap doesn't exist";
+  exit 3
+fi
+
+# Detect the 1ST_READ.BIN file.
+if [ ! -f "$source_dir/1ST_READ.BIN" ]; then
+  echo "$me: error: 1ST_READ.BIN doesn't exists in source_dir"
+  exit 4
+fi
+
+# Suppress spaces on volume name...
+volume_name=${volume_name// /_}
+
+# Prepare multisession information and switches
+msinfo=""
+mds_switch="-d"
+cdi_switch="-d"
+if [ $is_audio_data -eq 1 ]; then
+  msinfo="-C 0,11702"
+  mds_switch="-a"
+  cdi_switch=""  
+fi
+
+# Generate the ISO
+isofile="/tmp/$me-$$-$RANDOM.iso"
+mkisofs ${msinfo} -V "${volume_name}" -G "${bootstrap}" -joliet -rock -l -o "${isofile}" "${source_dir}"
+
+# Error when generating the ISO!
+if [ ! -f "$isofile" ]; then
+  echo "$me: error: unable to generate the ISO9660 file"
+  exit 6
+fi 
+
+echo mds4dc ${mds_switch} ${target_file} ${isofile}
+echo cdi4dc ${isofile} ${target_file} ${cdi_switch}
+
+# Generate the image!
+if [ $is_mds -eq 1 ]; then		
+  mds4dc ${mds_switch} ${target_file} ${isofile}
+else
+  cdi4dc ${isofile} ${target_file} ${cdi_switch}
+fi
+
+# Delete the temp ISO file
+if [ -f "$isofile" ]; then
+  rm "$isofile"
+fi
+
+#done!
+echo ""
+echo Your image is done.
