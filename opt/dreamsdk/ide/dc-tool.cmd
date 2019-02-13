@@ -42,7 +42,7 @@ goto run_loader
 
 :check_connectivity
 %FastPing% %InternetProtocolAddress%
-if not errorlevel 0 goto check_uac_status
+if errorlevel 1 goto check_uac_status
 goto run_loader
 
 :check_uac_status
