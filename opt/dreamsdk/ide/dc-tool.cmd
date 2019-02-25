@@ -9,8 +9,12 @@ set ScriptPath=%~dp0
 set ScriptPath=%ScriptPath:~0,-1%
 set DreamcastToolPath=%ScriptPath%\..\..\toolchains\dc\bin
 set ConfigurationFile=%ScriptPath%\..\..\..\etc\dreamsdk\dc-tool.conf
-set Elevate=%ScriptPath%\..\..\elevate\elevate.exe
-set FastPing=%ScriptPath%\..\helpers\fastping.exe
+set HelpersDirectory=%ScriptPath%\..\helpers
+set Elevate=%HelpersDirectory%\elevate.exe
+set FastPing=%HelpersDirectory%\fastping.exe
+
+if not exist %Elevate% goto err_elevate
+if not exist %FastPing% goto err_fastping
 
 rem Read Configuration
 for /F "tokens=*" %%i in (%ConfigurationFile%) do (
@@ -73,6 +77,18 @@ goto end
 :loader_undefined
 echo Dreamcast Tool (dc-tool) is not configured.
 echo Please run the DreamSDK Manager utility to set it up.
+goto end
+
+:err_elevate
+echo Elevate not found.
+goto err_not_found
+
+:err_fastping
+echo FastPing not found.
+goto err_not_found
+
+:err_not_found
+echo Did you move dc-tool elsewhere?
 goto end
 
 :end
