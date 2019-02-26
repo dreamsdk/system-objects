@@ -16,9 +16,12 @@ set ProjectPath=%1
 if "%ProjectPath%"=="" goto error_params
 if not exist %ProjectPath% goto error_params
 
-set ObjectPath=%ProjectPath%\%2
+set ObjectPath=%ProjectPath%%2
 if "%ObjectPath%"=="" goto error_params
 if not exist %ObjectPath% mkdir %ObjectPath%
+
+set OutputBinaryFile=%3
+if not "%OutputBinaryFile%"=="" set OutputBinaryFile=%ProjectPath%%OutputBinaryFile%
 
 set RomdiskImage=%RomdiskName%.img
 set RomdiskObject=%RomdiskName%.o
@@ -35,6 +38,10 @@ set RomdiskPreviousHash=
 if exist %ObjectPath%\%RomdiskHash% set /p RomdiskPreviousHash=<%ObjectPath%\%RomdiskHash%
 
 if "%RomdiskCurrentHash%"=="%RomdiskPreviousHash%" goto no_action_needed
+
+:delete_binary
+if exist %OutputBinaryFile% del %OutputBinaryFile%
+goto genromfs
 
 :genromfs
 if not exist %RomdiskName% goto error_romdisk
