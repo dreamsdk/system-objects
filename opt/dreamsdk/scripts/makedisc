@@ -18,6 +18,8 @@ bootstrap=$3
 volume_name=$4
 image_type=$5
 
+
+
 if [ -z "$target_file" ] || [ -z "$source_dir" ] || [ -z "$bootstrap" ]; then 
   echo "usage:"
   echo "  $me <target_file> <source_dir> <bootstrap> [volume_name] [image_type]";
@@ -25,19 +27,15 @@ if [ -z "$target_file" ] || [ -z "$source_dir" ] || [ -z "$bootstrap" ]; then
   echo "parameters:"
   echo "  target_file  : the target output file, should be a '.cdi' or a '.mds' file"
   echo "  source_dir   : the directory where are stored the files, i.e. at least "
-  echo "                 the 1ST_READ.BIN"
+  echo "                 the (usually) 1ST_READ.BIN file"
   echo "  bootstrap    : the full path to the bootstrap file, i.e. the IP.BIN file"
-  echo "  volume_name  : the disc label (without spaces)"
+  echo "  volume_name  : optional, the disc label; if not specified, it's read "
+  echo "                 from the bootstrap file"
   echo "  image_type   : optional, indicates if you want an audio/data (--audio)"
-  echo "                 or a data/data (--data) image (default is audio/data)"
+  echo "                 or a data/data (--data) image (default is --audio)"
   echo "example:"
   echo "  $me output.cdi ./data ./IP.BIN MY_LITTLE_PROG --audio"  
   exit 1
-fi
-
-# Optional parameter: Volume Name
-if [ -z "$volume_name" ]; then
-  volume_name="DREAMSDK"
 fi
 
 # Optional parameter: Image Type
@@ -83,14 +81,26 @@ if [ ! -d "$source_dir" ] || [ ! -f "$bootstrap" ]; then
   exit 3
 fi
 
-# Detect the 1ST_READ.BIN file.
-if [ ! -f "$source_dir/1ST_READ.BIN" ]; then
-  echo "$me: error: 1ST_READ.BIN does not exists in source_dir"
+# Check if the boot file exists.
+bootfile=$(ipreader ${bootstrap} --boot-file-name)
+if [ ! -f "${source_dir}/${bootfile}" ]; then
+  echo "$me: error: ${bootfile} does not exists in ${source_dir} dir"
   exit 4
 fi
 
-# Suppress spaces on volume name...
-volume_name=${volume_name// /_}
+# Getting additional fields for mkisofs
+sysid=$(ipreader ${bootstrap} --hardware-id)
+publisher=$(ipreader ${bootstrap} --software-maker-name)
+preparer="DreamSDK R$(dreamsdk-get-info --release)"
+appid=$(ipreader ${bootstrap} --title)
+
+# Optional parameter: Volume Name
+if [ -z "$volume_name" ]; then
+  volume_name="$appid"
+fi
+
+# Suppress invalid characters for the volume name...
+volume_name=$(echo "${volume_name}" | sed s/[^a-zA-Z0-9_]/_/g | awk '{print toupper($0)}' | cut -c-32)
 
 # Prepare multisession information and switches
 msinfo=""
@@ -104,7 +114,7 @@ fi
 
 # Generate the ISO
 isofile="/tmp/$me-$$-$RANDOM.iso"
-mkisofs ${msinfo} -V "${volume_name}" -G "${bootstrap}" -joliet -rock -l -o "${isofile}" "${source_dir}"
+mkisofs ${msinfo} -V "${volume_name}" -G "${bootstrap}" -sysid "${sysid}" -publisher "${publisher}" -preparer "${preparer}" -appid "${appid}" -duplicates-once -l -hide 0.0 -o "${isofile}" "${source_dir}"
 
 # Error when generating the ISO!
 if [ ! -f "$isofile" ]; then
@@ -114,10 +124,10 @@ fi
 
 # Generate the image!
 if [ $is_mds -eq 1 ]; then
-  test_component mds4dc	
+  test_component "mds4dc"
   mds4dc ${mds_switch} ${target_file} ${isofile}
 else
-  test_component cdi4dc
+  test_component "cdi4dc"
   cdi4dc ${isofile} ${target_file} ${cdi_switch}
 fi
 

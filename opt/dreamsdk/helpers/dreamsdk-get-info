@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if [ -z "$dreamsdk_base" ]; then
+  echo "fatal: \$dreamsdk_base is undefined!";
+  exit 1;
+fi
+
+param=$(echo "$1" | awk '{print tolower($0)}')
+
+if [ -z "$param" ]; then
+  echo "fatal: no supplied parameter, must be --release or --date.";
+  exit 2;
+fi
+
+if [ ! "$param" == "--release" ] && [ ! "$param" == "--date" ]; then
+  echo "fatal: option not recognized: $param";
+  exit 3;
+fi
+
+dreamsdk_version_file=${dreamsdk_base}/VERSION
+
+if [ "$param" == "--release" ]; then
+  dreamsdk_release=$(awk -F "=" '/Release/ {print $2}' ${dreamsdk_version_file});
+  echo "$dreamsdk_release";
+  exit;
+fi
+
+if [ "$param" == "--date" ]; then
+  dreamsdk_date=$(awk -F "=" '/Date/ {print $2}' ${dreamsdk_version_file})
+  echo "$dreamsdk_date";
+  exit;
+fi

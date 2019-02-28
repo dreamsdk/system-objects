@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 
-if [ -z "$dreamsdk_base" ]; then
-  echo "fatal: \$dreamsdk_base is undefined!";
-  exit;
-fi
-
-dreamsdk_version_file=${dreamsdk_base}/VERSION
-dreamsdk_release=$(awk -F "=" '/Release/ {print $2}' ${dreamsdk_version_file})
-dreamsdk_date=$(awk -F "=" '/Date/ {print $2}' ${dreamsdk_version_file})
+dreamsdk_release=$(dreamsdk-get-info --release)
+dreamsdk_date=$(dreamsdk-get-info --date)
 
 # Display DreamSDK welcome messages
 if [ ${kos_initialized} -eq 0 ]; then
