@@ -13,34 +13,47 @@ set DirHash=%ScriptPath%\..\helpers\dirhash.exe
 if not exist %DirHash% goto error_dirhash
 
 set ProjectPath=%1
+call :dequote ProjectPath
 if "%ProjectPath%"=="" goto error_params
-if not exist %ProjectPath% goto error_params
+if not exist "%ProjectPath%" goto error_params
 
-set ObjectPath=%ProjectPath%%2
+set ObjectBinaryPath=%2
+call :dequote ObjectBinaryPath
+
+set ObjectPath=%ProjectPath%%ObjectBinaryPath%
 if "%ObjectPath%"=="" goto error_params
-if not exist %ObjectPath% mkdir %ObjectPath%
+if not exist "%ObjectPath%" mkdir "%ObjectPath%"
 
 set OutputBinaryFile=%3
-if not "%OutputBinaryFile%"=="" set OutputBinaryFile=%ProjectPath%%OutputBinaryFile%
+call :dequote OutputBinaryFile
+if not "%OutputBinaryFile%"=="" set OutputBinaryFile="%ProjectPath%%OutputBinaryFile%"
 
 set RomdiskImage=%RomdiskName%.img
 set RomdiskObject=%RomdiskName%.o
 set RomdiskHash=%RomdiskName%.hash
 set GenRomFsStackDumpFile=genromfs.exe.stackdump
 
-cd /D %ProjectPath%
+cd /D "%ProjectPath%"
 
 rem check if generation is necessary
 %DirHash% %RomdiskName% -nowait -quiet > %RomdiskHash%
 set /p RomdiskCurrentHash=<%RomdiskHash%
 
 set RomdiskPreviousHash=
-if exist %ObjectPath%\%RomdiskHash% set /p RomdiskPreviousHash=<%ObjectPath%\%RomdiskHash%
+if exist "%ObjectPath%\%RomdiskHash%" set /p RomdiskPreviousHash=<"%ObjectPath%\%RomdiskHash%"
 
-if "%RomdiskCurrentHash%"=="%RomdiskPreviousHash%" goto no_action_needed
+rem check romdisk hash
+if "%RomdiskCurrentHash%"=="%RomdiskPreviousHash%" goto check_romdisk_obj
+goto delete_binary
 
+:check_romdisk_obj
+rem check if the romdisk file exists
+if exist "%ObjectPath%\%RomdiskObject%" goto no_action_needed
+goto delete_binary
+
+rem start romdisk generation
 :delete_binary
-if exist %OutputBinaryFile% del %OutputBinaryFile%
+if exist "%OutputBinaryFile%" del "%OutputBinaryFile%"
 goto genromfs
 
 :genromfs
@@ -55,9 +68,9 @@ goto bin2o
 goto finalize
 
 :finalize
-if exist %RomdiskImage% move %RomdiskImage% %ObjectPath% > nul
-if exist %RomdiskObject% move %RomdiskObject% %ObjectPath% > nul
-if exist %RomdiskHash% move %RomdiskHash% %ObjectPath% > nul
+if exist %RomdiskImage% move %RomdiskImage% "%ObjectPath%" > nul
+if exist %RomdiskObject% move %RomdiskObject% "%ObjectPath%" > nul
+if exist %RomdiskHash% move %RomdiskHash% "%ObjectPath%" > nul
 goto end
 
 :no_action_needed
@@ -65,7 +78,7 @@ if exist %RomdiskHash% del %RomdiskHash%
 goto end
 
 :usage
-echo Usage: %~n0 ^<ProjectPath^> ^<ObjectPath^>
+echo Usage: %~n0 ^<ProjectPath^> ^<ObjectPath^> ^<OutputBinaryFile^>
 goto end
 
 :error_runner
@@ -92,3 +105,9 @@ goto end
 
 :end
 popd
+goto :eof
+
+rem Thanks: https://ss64.com/nt/syntax-dequote.html
+:dequote
+for /f "delims=" %%A in ('echo %%%1%%') do set %1=%%~A
+goto :eof
