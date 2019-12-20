@@ -18,17 +18,17 @@ bootstrap=$3
 volume_name=$4
 image_type=$5
 
-
-
-if [ -z "$target_file" ] || [ -z "$source_dir" ] || [ -z "$bootstrap" ]; then 
+if [ -z "$target_file" ] || [ -z "$source_dir" ]; then 
   echo "usage:"
-  echo "  $me <target_file> <source_dir> <bootstrap> [volume_name] [image_type]";
+  echo "  $me <target_file> <source_dir> [bootstrap] [volume_name] [image_type]";
   echo ""
   echo "parameters:"
   echo "  target_file  : the target output file, should be a '.cdi' or a '.mds' file"
   echo "  source_dir   : the directory where are stored the files, i.e. at least "
   echo "                 the (usually) 1ST_READ.BIN file"
-  echo "  bootstrap    : the full path to the bootstrap file, i.e. the IP.BIN file"
+  echo "  bootstrap    : optional, the full path to the bootstrap file, i.e. the"
+  echo "                 IP.BIN file; if not specified, it will try to find it in"
+  echo "                 the current dir and in the <source_dir>, in this order"  
   echo "  volume_name  : optional, the disc label; if not specified, it's read "
   echo "                 from the bootstrap file"
   echo "  image_type   : optional, indicates if you want an audio/data (--audio)"
@@ -75,10 +75,24 @@ if [ $is_audio_data -eq 0 ] && [ $is_data_data -eq 0 ]; then
   exit 5
 fi
 
-# Check input files/directories
-if [ ! -d "$source_dir" ] || [ ! -f "$bootstrap" ]; then
-  echo "$me: error: source_dir and/or bootstrap does not exist";
+# Check source directory
+if [ ! -d "$source_dir" ]; then
+  echo "$me: error: source_dir does not exist";
   exit 3
+fi
+
+# Try to detect the bootstrap file
+if [ -z "$bootstrap" ]; then
+  bootstrap="IP.BIN";
+  if [ ! -f "$bootstrap" ]; then
+    bootstrap="$source_dir/IP.BIN";  
+  fi  
+fi
+
+# Check the bootstrap file
+if [ ! -f "$bootstrap" ]; then
+  echo "$me: error: bootstrap does not exist";  
+  exit 8
 fi
 
 # Check if the boot file exists.
@@ -91,7 +105,7 @@ fi
 # Getting additional fields for mkisofs
 sysid=$(ipreader ${bootstrap} --hardware-id)
 publisher=$(ipreader ${bootstrap} --software-maker-name)
-preparer="DreamSDK R$(dreamsdk-get-info --release)"
+preparer="DreamSDK $(dreamsdk-get-info --release)"
 appid=$(ipreader ${bootstrap} --title)
 
 # Optional parameter: Volume Name
