@@ -10,10 +10,10 @@ set ScriptPath=%ScriptPath:~0,-1%
 set DreamcastToolPath=%ScriptPath%\..\..\toolchains\dc\bin
 set ConfigurationFile=%ScriptPath%\..\..\..\etc\dreamsdk\dc-tool.conf
 set HelpersDirectory=%ScriptPath%\..\helpers
-set Elevate=%HelpersDirectory%\elevate.exe
 set FastPing=%HelpersDirectory%\fastping.exe
+set FastARP=%HelpersDirectory%\fastarp.exe
 
-if not exist %Elevate% goto err_elevate
+if not exist %FastARP% goto err_fastarp
 if not exist %FastPing% goto err_fastping
 
 rem Read Configuration
@@ -26,6 +26,7 @@ call :trim Kind
 call :trim Executable
 call :trim CommandLine
 call :trim MediaAccessControlEnabled
+call :trim HostMediaAccessControlAddress
 call :trim InternetProtocolAddress
 call :trim MediaAccessControlAddress
 
@@ -57,13 +58,12 @@ set is_uac_enabled=1
 if "%is_uac_enabled%"=="1" goto exec_arp_uac
 goto exec_arp
 
-:exec_arp
-arp -s %InternetProtocolAddress% %MediaAccessControlAddress%
-goto run_loader
-
 :exec_arp_uac
 echo Please confirm UAC to allow the ARP entry addition...
-%Elevate% -c -w arp -s %InternetProtocolAddress% %MediaAccessControlAddress%
+goto exec_arp
+
+:exec_arp
+%FastARP% %HostMediaAccessControlAddress% %InternetProtocolAddress% %MediaAccessControlAddress%
 goto run_loader
 
 :run_loader
@@ -79,8 +79,8 @@ echo Dreamcast Tool (dc-tool) is not configured.
 echo Please run the DreamSDK Manager utility to set it up.
 goto end
 
-:err_elevate
-echo Elevate not found.
+:err_fastarp
+echo FastARP not found.
 goto err_not_found
 
 :err_fastping

@@ -11,6 +11,7 @@ executable=$(awk -F "=" '/Executable/ {print $2}' ${dctool_conf})
 commandline=$(awk -F "=" '/CommandLine/ {print $2}' ${dctool_conf})
 dreamcast_ip=$(awk -F "=" '/InternetProtocolAddress/ {print $2}' ${dctool_conf})
 dreamcast_mac=$(awk -F "=" '/MediaAccessControlAddress/ {print $2}' ${dctool_conf})
+host_mac=$(awk -F "=" '/HostMediaAccessControlAddress/ {print $2}' ${dctool_conf})
 use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2}' ${dctool_conf})
 
 dreamcast_tool_not_configured() {
@@ -27,17 +28,14 @@ if [ "$kind" == "0" ] || [ -z "$is_executable_exists" ]; then
 fi
 
 # Handle arp
-if [ "$kind" == "2" ] && [ "$use_arp" == "1" ]; then  
-  arp_cmd="arp -s ${dreamcast_ip} ${dreamcast_mac}"
+if [ "$kind" == "2" ] && [ "$use_arp" == "1" ]; then
   fastping ${dreamcast_ip}
   if [ $? -ne 0 ]; then
     is_uac_enabled=$(uac-status)
     if [ "$is_uac_enabled" == "1" ]; then    
       echo "Please confirm UAC to allow the ARP entry addition..."
-      elevate -c -w ${arp_cmd}
-    else
-      ${arp_cmd}
     fi
+	fastarp ${host_mac} ${dreamcast_ip} ${dreamcast_mac}
   fi
 fi
 
