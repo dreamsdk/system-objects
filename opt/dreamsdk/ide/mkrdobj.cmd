@@ -53,7 +53,7 @@ goto delete_binary
 
 rem start romdisk generation
 :delete_binary
-if exist "%OutputBinaryFile%" del "%OutputBinaryFile%"
+if exist %OutputBinaryFile% del %OutputBinaryFile%
 goto genromfs
 
 :genromfs
