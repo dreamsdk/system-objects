@@ -13,18 +13,20 @@ if not exist %MakeIsoFileSystem% goto error_mkisofs
 set DirHash=%ScriptPath%\..\helpers\dirhash.exe
 if not exist %DirHash% goto error_dirhash
 
+rem Project path
 set ProjectPath=%1
 call :dequote ProjectPath
 if "%ProjectPath%"=="" goto error_params
 if not exist "%ProjectPath%" goto error_params
 
+rem Object path
 set ObjectBinaryPath=%2
 call :dequote ObjectBinaryPath
-
 set ObjectPath=%ProjectPath%%ObjectBinaryPath%
 if "%ObjectPath%"=="" goto error_params
 if not exist "%ObjectPath%" mkdir "%ObjectPath%"
 
+rem CDFS files
 set VirtualCompactDiscImageFile=%VirtualCompactDiscName%.iso
 set VirtualCompactDiscHash=%VirtualCompactDiscName%.hash
 
@@ -35,14 +37,11 @@ rem check if generation is necessary
 set /p VirtualCompactDiscCurrentHash=<%VirtualCompactDiscHash%
 
 set VirtualCompactDiscPreviousHash=
-if exist "%ObjectPath%\%VirtualCompactDiscHash%" set /p VirtualCompactDiscPreviousHash=<"%ObjectPath%\%VirtualCompactDiscHash%"
+if exist "%ObjectPath%%VirtualCompactDiscHash%" set /p VirtualCompactDiscPreviousHash=<"%ObjectPath%%VirtualCompactDiscHash%"
 
 rem check romdisk hash
-if "%VirtualCompactDiscCurrentHash%"=="%VirtualCompactDiscPreviousHash%" goto check_cdfs_image
-
-:check_cdfs_image
-rem check if the romdisk file exists
-if exist "%ObjectPath%\%VirtualCompactDiscImageFile%" goto no_action_needed
+if "%VirtualCompactDiscCurrentHash%"=="%VirtualCompactDiscPreviousHash%" goto no_action_needed
+goto genisofs
 
 :genisofs
 if not exist %VirtualCompactDiscName% goto error_source
