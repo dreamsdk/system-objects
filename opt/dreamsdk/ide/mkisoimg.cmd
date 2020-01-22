@@ -62,9 +62,9 @@ echo Usage: %~n0 ^<ProjectPath^> ^<ObjectPath^>
 goto end
 
 :error_mkisofs
-echo Make ISO File System – ISO9660 image generator (mkisofs) is not available.
-echo Have you moved %~n0 elsewhere or do you have disabled the installation of this
-echo component during the installation?
+echo Make ISO File System - ISO9660 image generator (mkisofs) is not available.
+echo Have you moved %~n0 elsewhere or do you have disabled the installation of
+echo mkisofs during the DreamSDK installation?
 goto end
 
 :error_dirhash
@@ -75,13 +75,8 @@ goto end
 :error_params
 goto usage
 
-:error_genromfs
-echo Unable to generate the ISO9660 image file!
-cmd /c exit /b 1
-goto end
-
 :error_source
-echo The source directory was not found!
+echo The source directory (%VirtualCompactDiscName%) was not found!
 cmd /c exit /b 1
 goto end
 
