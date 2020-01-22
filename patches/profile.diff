@@ -1,0 +1,72 @@
+--- profile	2009-07-11 18:34:34 +0000
++++ profile.dreamsdk	2019-02-14 09:57:57 +0000
+@@ -56,5 +56,68 @@
+ 
+ alias clear=clsb
+ 
+-cd "$HOME"
++#cd "$HOME"
+ 
++### DreamSDK ###################################################################
++
++# Toolchains base directory
++export toolchains_base=/opt/toolchains/dc
++
++# KallistiOS initialization script
++export environ=$toolchains_base/kos/environ.sh
++
++# KallistiOS utilities directory
++export kos_utilities=$toolchains_base/kos/utils
++
++# DreamSDK base directory
++export dreamsdk_base=/opt/dreamsdk
++
++# DreamSDK configuration file
++export dreamsdk_conf=/etc/dreamsdk/dreamsdk.conf
++
++# Dreamcast Tool configuration file
++export dctool_conf=/etc/dreamsdk/dc-tool.conf
++
++# Add additional items in the PATH
++export PATH="${PATH}:${dreamsdk_base}/helpers/:${dreamsdk_base}/scripts/:${dreamsdk_base}/addons/"
++
++# Force GNU compilers messages in English language
++# This avoid some encoding problems in the console.
++export LANG=en
++
++# Initialize KallistiOS
++export kos_initialized=0
++if [ -f ${environ} ]; then
++  source ${environ}
++  export kos_initialized=1	  
++fi
++
++# Add additional KallistiOS utilities in PATH if possible
++if [ $kos_initialized -eq 1 ]; then
++  export PATH="${PATH}:${kos_utilities}/bin2c:${kos_utilities}/bin2o:${kos_utilities}/dcbumpgen:${kos_utilities}/genexports:${kos_utilities}/genromfs:${kos_utilities}/kmgenc:${kos_utilities}/scramble:${kos_utilities}/vqenc:${kos_utilities}/wav2adpcm"
++fi
++
++# Change to the passed directory if needed...
++if [ -n "$_WORKING_DIRECTORY" ]; then
++  cd "$_WORKING_DIRECTORY"  
++fi
++
++# By default, MSYS is always switching to the home directory.
++# We don't want this, as we will allow to open a shell in a specific folder and
++# run some commands from there directly from the prompt.
++if [ -z "$_EXTERNAL_COMMAND" ]; then
++  # Default usage (as normal MSYS instance)
++  if [ -z "$_WORKING_DIRECTORY" ]; then    
++    cd "$HOME"
++  fi
++  
++  # Display version and banner
++  dreamsdk-version  
++else
++  # Command passed to the launcher
++  $_EXTERNAL_COMMAND
++  if [ -n "$_EXITCODE" ]; then
++    echo $? > "$_EXITCODE"
++  fi
++  logout
++fi
