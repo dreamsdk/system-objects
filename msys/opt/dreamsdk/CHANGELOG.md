@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In **Code::Blocks**, an issue when generating **Romdisk** from projects with
   spaces in their name has been fixed.
 - **MakeDisc**: An little cosmetic problem has been fixed.
+- Various fixes for Windows 10+ (mainly related to UAC).
 
 ### Updated
 - **GNU Compiler Collection (GCC) for SuperH** and **AICA** is now `4.7.4`, as
