@@ -39,5 +39,37 @@ if [ "$kind" == "2" ] && [ "$use_arp" == "1" ]; then
   fi
 fi
 
+# Handle user params
+
+# Thanks: https://stackoverflow.com/a/1683850/3726096
+trim()
+{
+    local trimmed="$1"
+
+    # Strip leading spaces.
+    while [[ $trimmed == ' '* ]]; do
+       trimmed="${trimmed## }"
+    done
+    # Strip trailing spaces.
+    while [[ $trimmed == *' ' ]]; do
+        trimmed="${trimmed%% }"
+    done
+
+    echo "$trimmed"
+}
+
+# Thanks: https://stackoverflow.com/a/1669493/3726096
+userparams=""
+whitespace="[[:space:]]"
+for i in "$@"
+do
+    if [[ $i =~ $whitespace ]]
+    then
+        i=\"$i\"
+    fi
+    userparams+="$i "
+done
+
 # run the loader!
-${executable} ${commandline} $*
+dctool_cmd="${executable} ${commandline} $(trim "${userparams}")"
+bash -c "${dctool_cmd}"
