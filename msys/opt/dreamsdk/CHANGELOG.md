@@ -7,8 +7,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [R3] - 2020-01-DD
+## [R3] - 2020-03-DD
 ### Added
+- Experimental Ruby support! This uses mruby (lightweight Ruby).
 - Some useful links were added in the **Windows Start** menu.
 - Support of **CDFS** images in **Code::Blocks**: You have now the possibility 
   to simulate a virtual **CD-ROM** through an **ISO** file, when selecting the
