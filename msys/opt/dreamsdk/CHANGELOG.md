@@ -1,13 +1,13 @@
 # Changelog for DreamSDK
 
-**DreamSDK** is a modern, ready-to-use environment for the **Sega Dreamcast** development designed for the **Microsoft Windows** platform.
+**DreamSDK** is a modern, ready-to-use environment for the **Sega Dreamcast**
+development designed for the **Microsoft Windows** platform.
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [R3] - 2020-03-DD
+## [R3] - 2020-08-31
 ### Added
 - Experimental Ruby support! This uses mruby (lightweight Ruby).
 - Some useful links were added in the **Windows Start** menu.
@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to simulate a virtual **CD-ROM** through an **ISO** file, when selecting the
   appropriate option when creating a project in **Code::Blocks**.
 - Support for `libkosfat` addon library.
-- You have now the possibility to manage **Code::Blocks** in **DreamSDK Manager**. 
+- You have now the possibility to manage **Code::Blocks** in **DreamSDK Manager**.
+- The USB baud rates for **Dreamcast Tool Serial** are now supported.
 - This **CHANGELOG** file to hopefully serve as an evolving example of a
   standardized open source project **CHANGELOG**.
 
@@ -53,13 +54,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Various fixes for Windows 10+ (mainly related to UAC).
 
 ### Updated
-- **GNU Compiler Collection (GCC) for SuperH** and **AICA** is now `4.7.4`, as
-  this version includes several fixes for `sh-elf` target.
+- **GNU Compiler Collection (GCC) for SuperH** and **AICA** is now `9.3.0`, as
+  this version includes several fixes for `sh-elf` target, including some
+  strange bugs like the C++ `concurrence_error`.
 - **GNU Compiler Collection (GCC) for Win32** is now `8.2.0`.
-- **GNU Debugger (GDB) for SuperH** is now `8.3.1`.
+- **GNU Debugger (GDB) for SuperH** is now `9.2`.
 - **DreamSDK Manager** was updated to display more useful information like
   repositories versions or environment information.
 - The help file was updated to reflect all the changes of this release.
+
+### Removed
+- The **IPCreate** tool was removed, as the standard KallistiOS repository
+  contains now the modernized **IP creator** (`makeip`) tool. 
 
 ## [R2] - 2019-03-05
 ### Added
