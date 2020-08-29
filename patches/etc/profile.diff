@@ -1,6 +1,6 @@
---- profile	2009-07-11 18:34:34 +0000
-+++ profile.dreamsdk	2019-02-14 09:57:57 +0000
-@@ -56,5 +56,68 @@
+--- profile	2009-07-11 19:34:34 +0000
++++ profile.dreamsdk	2020-08-29 16:27:08 +0000
+@@ -56,5 +56,77 @@
  
  alias clear=clsb
  
@@ -43,7 +43,16 @@
 +
 +# Add additional KallistiOS utilities in PATH if possible
 +if [ $kos_initialized -eq 1 ]; then
-+  export PATH="${PATH}:${kos_utilities}/bin2c:${kos_utilities}/bin2o:${kos_utilities}/dcbumpgen:${kos_utilities}/genexports:${kos_utilities}/genromfs:${kos_utilities}/kmgenc:${kos_utilities}/scramble:${kos_utilities}/vqenc:${kos_utilities}/wav2adpcm"
++  export PATH="${PATH}:${kos_utilities}/bin2c"
++  export PATH="${PATH}:${kos_utilities}/bin2o"
++  export PATH="${PATH}:${kos_utilities}/dcbumpgen"
++  export PATH="${PATH}:${kos_utilities}/genexports"
++  export PATH="${PATH}:${kos_utilities}/genromfs"
++  export PATH="${PATH}:${kos_utilities}/kmgenc"
++  export PATH="${PATH}:${kos_utilities}/makeip"
++  export PATH="${PATH}:${kos_utilities}/scramble"
++  export PATH="${PATH}:${kos_utilities}/vqenc"
++  export PATH="${PATH}:${kos_utilities}/wav2adpcm"
 +fi
 +
 +# Change to the passed directory if needed...
