@@ -1,6 +1,6 @@
 --- profile	2009-07-11 19:34:34 +0000
-+++ profile.dreamsdk	2020-08-29 16:27:08 +0000
-@@ -56,5 +56,77 @@
++++ profile.dreamsdk	2020-09-27 14:44:56 +0000
+@@ -56,5 +56,81 @@
  
  alias clear=clsb
  
@@ -8,6 +8,10 @@
 +#cd "$HOME"
  
 +### DreamSDK ###################################################################
++
++# Handle external updated Wget
++export WGETRC=/etc/wgetrc
++export PATH="${PATH}:/opt/wget"
 +
 +# Toolchains base directory
 +export toolchains_base=/opt/toolchains/dc
