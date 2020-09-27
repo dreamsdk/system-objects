@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [R3] - 2020-08-31
+## [R3] - 2020-MM-DD
 ### Added
 - Experimental Ruby support! This uses mruby (lightweight Ruby).
 - Some useful links were added in the **Windows Start** menu.
@@ -42,6 +42,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - The installation of **GNU Debugger (GDB) for SuperH** is better; and **Python**
   extensions may be enabled/disabled on user request (previously,
   **GDB for SuperH** was linked to **Python 2.7** only).
+- Removing the outdated **Wget 1.12** from MSYS and replacing it with a
+  stand-alone version from Jernej Simončič: **Wget 1.19.4**.
 
 ### Fixed
 - **KallistiOS**, **KallistiOS Ports** and **Dreamcast Tool** repositories are
@@ -51,13 +53,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - In **Code::Blocks**, an issue when generating **Romdisk** from projects with
   spaces in their name has been fixed.
 - **MakeDisc**: An little cosmetic problem has been fixed.
-- Various fixes for Windows 10+ (mainly related to UAC).
+- Various fixes for **Windows 10+**; mainly related to User Account Control
+  (UAC).
 
 ### Updated
-- **GNU Compiler Collection (GCC) for SuperH** and **AICA** is now `9.3.0`, as
+- **GNU Compiler Collection (GCC) for SuperH** and **AICA** can be `9.3.0`, as
   this version includes several fixes for `sh-elf` target, including some
-  strange bugs like the C++ `concurrence_error`.
-- **GNU Compiler Collection (GCC) for Win32** is now `8.2.0`.
+  strange bugs like the C++ `concurrence_error`. You still have the choice to
+  stick with `4.7.4`.
+- **GNU Compiler Collection (GCC) for Win32** is now `9.2.0`.
 - **GNU Debugger (GDB) for SuperH** is now `9.2`.
 - **DreamSDK Manager** was updated to display more useful information like
   repositories versions or environment information.
