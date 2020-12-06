@@ -21,19 +21,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   standardized open source project **CHANGELOG**.
 
 ### Improved
-- An offline version of **KallistiOS**, **KallistiOS Ports** and **Dreamcast Tool** 
-  are now integrated in the package. But it's strongly recommanded to use the
-  online repositories!
+- An offline version of **KallistiOS**, **KallistiOS Ports** and
+  **Dreamcast Tool** are now integrated in the package. But it's strongly
+  recommanded to use the online repositories!
 - Better handling of prerequisites: **Git**, **Python** and 
   **Subversion Client (SVN)** are not mandatory in all the cases, this depends
   now of your choice. **Git** is mandatory only if you use online repositories, 
   **Python** and **Subversion Client** are always optional but preferred if you
-  have the possibility to install these.
+  have the possibility to install these dependencies.
 - When installing **Code::Blocks**, the process of updating user's configuration
   files is better. Now the **Setup** process detects all usable configuration
   files and patch them if possible.
 - In the **DreamSDK Manager** tool, URL for the **Git** repositories may be
-  changed.
+  changed now, even if the installation was already done.
 - Better support for **ARP** (creation of the tool **FastARP**). It uses the
   classic `arp` command in **Windows XP** and `netsh` in modern **Windows**.
 - **MakeDisc**: The `bootstrap` parameter is now optional. It will try to detect
@@ -41,10 +41,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   `1ST_READ.BIN` file is located.
 - The installation of **GNU Debugger (GDB) for SuperH** is better; and **Python**
   extensions may be enabled/disabled on user request (previously,
-  **GDB for SuperH** was linked to **Python 2.7** only).
-- Removing the outdated **Wget 1.12** from MSYS and replacing it with a
-  stand-alone version from Jernej Simončič: **Wget 1.19.4**.
+  **GDB for SuperH** was linked to **Python 2.7** only, so **Python** was
+  mandatory).
+- Removing some outdated packages provided by MSYS and replacing them with
+  standalone packages. When possible, these packages were installed in `/opt`.
 
+    - **GNU Awk**: From `3.1.7` to `5.1.0` (provided by [Michael M. Builov](https://github.com/mbuilov/gawk-windows))
+    - **MinTTY**: From `1.0.3` to `3.4.0` (using official [MinTTY](https://mintty.github.io/) source)
+    - **Wget**: From `1.12` to `1.19.4` (provided by [Jernej Simončič](https://eternallybored.org/misc/wget/))
+	
 ### Fixed
 - **KallistiOS**, **KallistiOS Ports** and **Dreamcast Tool** repositories are
   now the **Nitro** versions from [Simulant Engine](https://gitlab.com/simulant/community/ "Simulant Engine")
