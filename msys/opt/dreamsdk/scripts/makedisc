@@ -114,7 +114,7 @@ if [ -z "$volume_name" ]; then
 fi
 
 # Suppress invalid characters for the volume name...
-volume_name=$(echo "${volume_name}" | sed s/[^a-zA-Z0-9_]/_/g | awk '{print toupper($0)}' | cut -c-32)
+volume_name=$(echo "${volume_name}" | sed s/[^a-zA-Z0-9_]/_/g | awk '{print toupper($0);}' | cut -c-32)
 
 # Prepare multisession information and switches
 msinfo=""

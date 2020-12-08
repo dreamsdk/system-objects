@@ -5,7 +5,7 @@ if [ -z "$dreamsdk_base" ]; then
   exit 1;
 fi
 
-param=$(echo "$1" | awk '{print tolower($0)}')
+param=$(echo "$1" | awk '{print tolower($0);}')
 
 if [ -z "$param" ]; then
   echo "fatal: no supplied parameter, must be --release or --date.";
@@ -20,13 +20,13 @@ fi
 dreamsdk_version_file=${dreamsdk_base}/VERSION
 
 if [ "$param" == "--release" ]; then
-  dreamsdk_release=$(awk -F "=" '/Release/ {print $2}' ${dreamsdk_version_file});
+  dreamsdk_release=$(awk -F "=" '/Release/ {print $2;}' ${dreamsdk_version_file});
   echo "$dreamsdk_release";
   exit;
 fi
 
 if [ "$param" == "--date" ]; then
-  dreamsdk_date=$(awk -F "=" '/Date/ {print $2}' ${dreamsdk_version_file})
+  dreamsdk_date=$(awk -F "=" '/Date/ {print $2;}' ${dreamsdk_version_file})
   echo "$dreamsdk_date";
   exit;
 fi

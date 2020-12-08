@@ -69,7 +69,7 @@
 
   report(){
     printf '\r%s\n' "$1:"
-    query $1 | awk '/^Repository/||/^Installed/{print "  "$0}'
+    query $1 | awk '/^Repository/||/^Installed/{print "  "$0;}'
   }
 
   all(){

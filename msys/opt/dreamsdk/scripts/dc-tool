@@ -6,13 +6,13 @@ if [ -z "$toolchains_base" ]; then
 fi
 
 # Get dc-tool parameters
-kind=$(awk -F "=" '/Kind/ {print $2}' ${dctool_conf})
-executable=$(awk -F "=" '/Executable/ {print $2}' ${dctool_conf})
-commandline=$(awk -F "=" '/CommandLine/ {print $2}' ${dctool_conf})
-dreamcast_ip=$(awk -F "=" '/InternetProtocolAddress/ {print $2}' ${dctool_conf})
-dreamcast_mac=$(awk -F "=" '/MediaAccessControlAddress/ {print $2}' ${dctool_conf})
-host_mac=$(awk -F "=" '/HostMediaAccessControlAddress/ {print $2}' ${dctool_conf})
-use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2}' ${dctool_conf})
+kind=$(awk -F "=" '/Kind/ {print $2;}' ${dctool_conf})
+executable=$(awk -F "=" '/Executable/ {print $2;}' ${dctool_conf})
+commandline=$(awk -F "=" '/CommandLine/ {print $2;}' ${dctool_conf})
+dreamcast_ip=$(awk -F "=" '/InternetProtocolAddress/ {print $2;}' ${dctool_conf})
+dreamcast_mac=$(awk -F "=" '/MediaAccessControlAddress/ {print $2;}' ${dctool_conf})
+host_mac=$(awk -F "=" '/HostMediaAccessControlAddress/ {print $2;}' ${dctool_conf})
+use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2;}' ${dctool_conf})
 
 dreamcast_tool_not_configured() {
   echo "Dreamcast Tool (dc-tool) is not configured."
