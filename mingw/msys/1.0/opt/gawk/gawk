@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-BASEDIR=$(dirname "$0")
-REALGAWK=${BASEDIR}/wingawk/gawk
-WINAPP="${REALGAWK}" /opt/winpassthrough/winpassthrough "$@"
