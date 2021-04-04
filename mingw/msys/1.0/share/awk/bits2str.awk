@@ -1,4 +1,4 @@
-# bits2str --- turn an integer into readable ones and zeros
+# bits2str --- turn a byte into readable 1's and 0's
 
 function bits2str(bits,        data, mask)
 {

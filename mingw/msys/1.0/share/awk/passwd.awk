@@ -7,7 +7,7 @@
 
 BEGIN {
     # tailor this to suit your system
-    _pw_awklib = "/home/user/gawk-5.1.0-install/libexec/awk/"
+    _pw_awklib = "/usr/sbin/awk/"
 }
 
 function _pw_init(    oldfs, oldrs, olddol0, pwcat, using_fw, using_fpat)
