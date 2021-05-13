@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [R3] - 2020-MM-DD
+## [R3] - 2021-MM-DD
 ### Added
 - Experimental Ruby support! This uses mruby (lightweight Ruby).
 - Some useful links were added in the **Windows Start** menu.
@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Support for `libkosfat` addon library.
 - You have now the possibility to manage **Code::Blocks** in **DreamSDK Manager**.
 - The USB baud rates for **Dreamcast Tool Serial** are now supported.
+- Curl is now available.
 - This **CHANGELOG** file to hopefully serve as an evolving example of a
   standardized open source project **CHANGELOG**.
 
@@ -46,15 +47,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Removing some outdated packages provided by MSYS and replacing them with
   standalone packages. When possible, these packages were installed in `/opt`.
 
-    - **GNU Awk**: From `3.1.7` to `5.1.0` (provided by [Michael M. Builov](https://github.com/mbuilov/gawk-windows))
+    - **GNU Awk**: From `3.1.7` to `4.0.1` (provided [here](https://github.com/sizious/msys-gawk))
     - **MinTTY**: From `1.0.3` to `3.4.0` (using official [MinTTY](https://mintty.github.io/) source)
     - **Wget**: From `1.12` to `1.19.4` (provided by [Jernej Simončič](https://eternallybored.org/misc/wget/))
 	
 ### Fixed
-- **KallistiOS**, **KallistiOS Ports** and **Dreamcast Tool** repositories are
-  now the **Nitro** versions from [Simulant Engine](https://gitlab.com/simulant/community/ "Simulant Engine")
-  instead of official one as these contains various community improvements and
-  fixes.
 - In **Code::Blocks**, an issue when generating **Romdisk** from projects with
   spaces in their name has been fixed.
 - **MakeDisc**: An little cosmetic problem has been fixed.
@@ -71,6 +68,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **DreamSDK Manager** was updated to display more useful information like
   repositories versions or environment information.
 - The help file was updated to reflect all the changes of this release.
+- The JPEG library (`libjpeg`) is now `9d`.
+- The PNG library (`libpng`) is now `1.6.37`.
 
 ### Removed
 - The **IPCreate** tool was removed, as the standard KallistiOS repository
