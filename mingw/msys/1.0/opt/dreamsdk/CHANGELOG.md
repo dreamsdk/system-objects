@@ -52,11 +52,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     - **Wget**: From `1.12` to `1.19.4` (provided by [Jernej Simončič](https://eternallybored.org/misc/wget/))
 	
 ### Fixed
-- In **Code::Blocks**, an issue when generating **Romdisk** from projects with
-  spaces in their name has been fixed.
+- Some fixes in **Code::Blocks**:
+  * An issue when generating **Romdisk** from projects with spaces in their name
+    has been fixed.
+  * Static library project type is now fully supported.
 - **MakeDisc**: An little cosmetic problem has been fixed.
 - Various fixes for **Windows 10+**; mainly related to User Account Control
-  (UAC).
+  (UAC).  
 
 ### Updated
 - **GNU Compiler Collection (GCC) for SuperH** and **AICA** can be `9.3.0`, as
