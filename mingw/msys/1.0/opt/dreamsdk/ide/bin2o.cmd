@@ -22,11 +22,7 @@ set ObjectPath=%ProjectPath%%ObjectBinaryPath%
 if "%ObjectPath%"=="" goto error_params
 if not exist "%ObjectPath%" mkdir "%ObjectPath%"
 
-set OutputBinaryFile=%3
-call :dequote OutputBinaryFile
-if not "%OutputBinaryFile%"=="" set OutputBinaryFile="%ProjectPath%%OutputBinaryFile%"
-
-set ObjectName=%4
+set ObjectName=%3
 if "%ObjectName%"=="" goto error_params
 
 set ObjectInput=%ObjectName%.bin
@@ -47,18 +43,14 @@ if exist "%ObjectPreviousHashFile%" set /p ObjectPreviousHash=<"%ObjectPreviousH
 
 rem check hash
 if "%ObjectCurrentHash%"=="%ObjectPreviousHash%" goto check_romdisk_obj
-goto start_generation
+goto bin2o
 
 :check_romdisk_obj
 rem check if the romdisk file exists
 if exist "%ObjectPath%\%ObjectOutput%" goto no_action_needed
-goto start_generation
-
-rem start romdisk generation
-:start_generation
-if exist %OutputBinaryFile% del %OutputBinaryFile%
 goto bin2o
 
+rem start bin2o process
 :bin2o
 echo Processing: %ObjectName%
 %Runner% /opt/toolchains/dc/kos/utils/bin2o/bin2o %ObjectInput% %ObjectName% %ObjectOutput%
@@ -74,7 +66,7 @@ if exist %ObjectHash% del %ObjectHash%
 goto end
 
 :usage
-echo Usage: %~n0 ^<ProjectPath^> ^<ObjectPath^> ^<OutputBinaryFile^> ^<ObjectName^>
+echo Usage: %~n0 ^<ProjectPath^> ^<ObjectPath^> ^<ObjectName^>
 goto end
 
 :error_runner
