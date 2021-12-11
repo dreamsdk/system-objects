@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [R3] - 2021-MM-DD
+## [R3] - YYYY-MM-DD
 ### Added
 - Experimental Ruby support! This uses mruby (lightweight Ruby).
 - Some useful links were added in the **Windows Start** menu.
@@ -45,10 +45,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   **GDB for SuperH** was linked to **Python 2.7** only, so **Python** was
   mandatory).
 - Removing some outdated packages provided by MSYS and replacing them with
-  standalone packages. When possible, these packages were installed in `/opt`.
+  standalone packages.
 
     - **GNU Awk**: From `3.1.7` to `4.0.1` (provided [here](https://github.com/sizious/msys-gawk))
-    - **MinTTY**: From `1.0.3` to `3.4.0` (using official [MinTTY](https://mintty.github.io/) source)
+    - **MinTTY**: From `1.0.3` to `3.5.0` (using official [MinTTY](https://mintty.github.io/) source)
     - **Wget**: From `1.12` to `1.19.4` (provided by [Jernej Simončič](https://eternallybored.org/misc/wget/))
 	
 ### Fixed
@@ -64,9 +64,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **GNU Compiler Collection (GCC) for SuperH** and **AICA** can be `9.3.0`, as
   this version includes several fixes for `sh-elf` target, including some
   strange bugs like the C++ `concurrence_error`. You still have the choice to
-  stick with `4.7.4`.
+  stick with `4.7.4`. This can be changed later on **DreamSDK Manager**.
 - **GNU Compiler Collection (GCC) for Win32** is now `9.2.0`.
-- **GNU Debugger (GDB) for SuperH** is now `9.2`.
+- **GNU Debugger (GDB) for SuperH** is now `10.2`.
 - **DreamSDK Manager** was updated to display more useful information like
   repositories versions or environment information.
 - The help file was updated to reflect all the changes of this release.
