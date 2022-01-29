@@ -7,10 +7,10 @@ set VirtualCompactDiscLabel=CDFS
 set ScriptPath=%~dp0
 set ScriptPath=%ScriptPath:~0,-1%
 
-set MakeIsoFileSystem=%ScriptPath%\..\helpers\mkisofs.exe
+set MakeIsoFileSystem=%ScriptPath%\..\..\..\bin\mkisofs.exe
 if not exist %MakeIsoFileSystem% goto error_mkisofs
 
-set DirHash=%ScriptPath%\..\helpers\dirhash.exe
+set DirHash=%ScriptPath%\..\..\..\bin\dirhash.exe
 if not exist %DirHash% goto error_dirhash
 
 rem Project path
