@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+me=`basename "$0"`
+
+dreamsdk_release=$(dreamsdk-get-info --release)
+dreamsdk_date=$(dreamsdk-get-info --date)
+
+print_help_addon () {
+  _output_temp=$(command -v $1)
+  if [ ! -z "$_output_temp" ]; then
+    echo "$1: is not available, install it or reinstall DreamSDK"
+    exit 7
+  fi
+}
+
+print_help () {
+  echo ".-. .-. .-. .-. .  . .-. .-. . . ";
+  echo "|  )|(  |-  |-| |\/| \`-. |  )|<  ";
+  echo "\`-' ' ' \`-' \` ' '  \` \`-' \`-' ' \` ";
+  echo "DreamSDK ${dreamsdk_release} - Built on ${dreamsdk_date}";                             
+  echo "";
+  echo "use this utility to easily manage DreamSDK directly on command-line.";
+  echo "";
+  echo "usage:"
+  echo "  $me <command>";
+  echo ""
+  echo "command:"
+  echo "  documentation : open the DreamSDK Help file."
+  echo "  help          : the directory where are stored the files, i.e. at least "
+  echo "                  the (usually) 1ST_READ.BIN file"
+  echo "  manage        : optional, the full path to the bootstrap file, i.e. the"
+  echo "                  IP.BIN file; if not specified, it will try to find it in"
+  echo "                  the current dir and in the <source_dir>, in this order"
+  echo "  ports         : get information on KallistiOS Ports"
+  echo "  version       : optional, the disc label; if not specified, it's read "
+  echo "                  from the bootstrap file"
+  exit 1
+}
+
+command=$1
+
+cmd_documentation=0
+cmd_help=0
+cmd_manage=0
+cmd_ports=0
+cmd_version=0
+
+shopt -s nocasematch
+
+case $command in
+  documentation ) cmd_documentation=1;;
+  help ) cmd_help=1;;
+  manage ) cmd_manage=1;;
+  ports ) cmd_ports=1;;
+  version ) cmd_version=1;;
+esac
+
+# Check if a parameter has been entered
+if [ $cmd_documentation -eq 0 ] && [ $cmd_help -eq 0 ] && [ $cmd_manage -eq 0 ] && [ $cmd_ports -eq 0 ] && [ $cmd_version -eq 0 ]; then
+  print_help
+fi
+
+if [ $cmd_documentation -eq 1 ]; then
+  echo "browse: xxx";
+fi
+
+if [ $cmd_help -eq 1 ]; then
+  cmd_help_elevate=$(which elevate 2> /dev/null)
+  if [ ! -z $cmd_help_elevate ]; then
+    echo "elevate: xxxx";
+  fi
+  echo "browse: xxx";
+  echo "elevate: xxx";
+fi
+
+if [ $cmd_manage -eq 1 ]; then
+  dreamsdk-manager &
+fi
+
+if [ $cmd_version -eq 1 ]; then
+  echo "DreamSDK ${dreamsdk_release}"
+  echo "Built on ${dreamsdk_date}"
+fi
+
+if [ $cmd_ports -eq 1 ]; then
+  echo "Ports";
+fi
