@@ -3,13 +3,17 @@
 dreamsdk_release=$(dreamsdk-get-info --release)
 dreamsdk_date=$(dreamsdk-get-info --date)
 
-echo "                                                  ";
+kosports_status_installed=$(kosports status installed)
+kosports_status_available=$(kosports status available)
+
 echo " ____                         _____  ____   _____ ";
 echo "|    .  ___  ___  ___  _____ |   __||    . |  |  |";
 echo "|  |  ||  _|| -_|| .'||     ||__   ||  |  ||    -|";
 echo "|____/ |_|  |___||__,||_|_|_||_____||____/ |__|__|";
 echo "                                                  ";
 echo "DreamSDK ${dreamsdk_release} - Built on ${dreamsdk_date}";
+echo "${kosports_status_installed} installed KallistiOS Ports of ${kosports_status_available} availables";
+echo "";
 echo "Run \"dreamsdk\" for help with commands and usage.";
 
 if [ ${kos_initialized} -eq 0 ]; then
