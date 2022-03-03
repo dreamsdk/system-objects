@@ -1,6 +1,6 @@
 diff -ruN mingw/etc/profile dreamsdk/etc/profile
 --- mingw/etc/profile	2009-07-11 19:34:34 +0000
-+++ dreamsdk/etc/profile	2021-11-28 19:52:44 +0000
++++ dreamsdk/etc/profile	2022-03-03 20:25:54 +0000
 @@ -4,7 +4,7 @@
  # 
  #         File:	profile
@@ -10,7 +10,7 @@ diff -ruN mingw/etc/profile dreamsdk/etc/profile
  
  if [ -z "$MSYSTEM" ]; then
    MSYSTEM=MINGW32
-@@ -56,5 +56,84 @@
+@@ -56,5 +56,85 @@
  
  alias clear=clsb
  
@@ -34,6 +34,7 @@ diff -ruN mingw/etc/profile dreamsdk/etc/profile
 +
 +# DreamSDK base directory
 +export dreamsdk_base=/opt/dreamsdk
++export PATH="${PATH}:${dreamsdk_base}"
 +
 +# Toolchains base directory
 +export toolchains_base=/opt/toolchains/dc
