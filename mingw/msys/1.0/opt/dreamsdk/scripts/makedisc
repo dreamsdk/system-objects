@@ -12,29 +12,36 @@ test_component () {
 
 test_component "mkisofs"
 
-target_file=$1
-source_dir=$2
-bootstrap=$3
-volume_name=$4
-image_type=$5
+target_file=$1 	# targetfn
+source_dir=$2 	# sourcedir
+bootstrap=$3 	# bootfn
+volume_name=$4 	#volume
+image_type=$5 	# imgtype
+fs_option=$6 	# fs
+sort_file=$7	# sortfn
 
 if [ -z "$target_file" ] || [ -z "$source_dir" ]; then 
   echo "usage:"
-  echo "  $me <target_file> <source_dir> [bootstrap] [volume_name] [image_type]";
-  echo ""
-  echo "parameters:"
-  echo "  target_file  : the target output file, should be a '.cdi' or a '.mds' file"
-  echo "  source_dir   : the directory where are stored the files, i.e. at least "
-  echo "                 the (usually) 1ST_READ.BIN file"
-  echo "  bootstrap    : optional, the full path to the bootstrap file, i.e. the"
-  echo "                 IP.BIN file; if not specified, it will try to find it in"
-  echo "                 the current dir and in the <source_dir>, in this order"  
-  echo "  volume_name  : optional, the disc label; if not specified, it's read "
-  echo "                 from the bootstrap file"
-  echo "  image_type   : optional, indicates if you want an audio/data (--audio)"
-  echo "                 or a data/data (--data) image (default is --audio)"
-  echo "example:"
-  echo "  $me output.cdi ./data ./IP.BIN MY_LITTLE_PROG --audio"  
+  echo "  $me <targetfn> <sourcedir> [bootfn] [volume] [imgtype] [fs] [sortfn]";
+  echo "";
+  echo "parameters:";
+  echo "  targetfn     : the target output file, should be a '.cdi' or a '.mds' file";
+  echo "  sourcedir    : the directory where are stored the files, i.e. at least ";
+  echo "                 the (usually) 1ST_READ.BIN (scrambled!) file";
+  echo "  bootfn       : optional, the full path to the bootstrap file, i.e. the";
+  echo "                 IP.BIN file; if not specified, it will try to find it in";
+  echo "                 the current dir and in the <source_dir>, in this order";
+  echo "  volume       : optional, the disc label; if not specified, it's extracted ";
+  echo "                 from the bootstrap file";
+  echo "  imgtype      : optional, indicates if you want an audio/data (--audio)";
+  echo "                 or a data/data (--data) image (default is --audio)";
+  echo "  fs           : optional, indicates if you want to add Joliet (--joliet),";
+  echo "                 Rock Ridge (--rock) or both (--joliet-rock) file system";
+  echo "                 support (default is nothing)";
+  echo "  sortfn       : optional, use specified sort file for optimizing disc tree";
+  echo "                 layout (default is none)";
+  echo "example:";
+  echo "  $me output.cdi ./data ./IP.BIN MYAPP --audio --joliet-rock sortfile.str";
   exit 1
 fi
 
@@ -126,9 +133,24 @@ if [ $is_audio_data -eq 1 ]; then
   cdi_switch=""  
 fi
 
+# File system options
+fs_option_switch=""
+shopt -s nocasematch
+case $fs_option in
+  --joliet ) fs_option_switch="-joliet ";;
+  --rock ) fs_option_switch="-rational-rock ";;
+  --joliet-rock ) fs_option_switch="-rational-rock -joliet ";;
+esac
+
+# Optional parameter: Sort file
+sort_file_switch="";
+if [ -f "$sort_file" ]; then
+  sort_file_switch="-sort ${sort_file} ";
+fi
+
 # Generate the ISO
 isofile="/tmp/$me-$$-$RANDOM.iso"
-mkisofs ${msinfo} -V "${volume_name}" -G "${bootstrap}" -sysid "${sysid}" -publisher "${publisher}" -preparer "${preparer}" -appid "${appid}" -duplicates-once -l -hide 0.0 -o "${isofile}" "${source_dir}"
+mkisofs ${msinfo} -V "${volume_name}" -G "${bootstrap}" -sysid "${sysid}" -publisher "${publisher}" -preparer "${preparer}" -appid "${appid}" -duplicates-once -full-iso9660-filenames ${fs_option_switch}-hide 0.0 ${sort_file_switch}-o "${isofile}" "${source_dir}"
 
 # Error when generating the ISO!
 if [ ! -f "$isofile" ]; then
