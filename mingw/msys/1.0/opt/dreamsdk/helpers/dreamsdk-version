@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 dreamsdk_release=$(dreamsdk-get-info --release)
+dreamsdk_build=$(dreamsdk-get-info --build)
 dreamsdk_date=$(dreamsdk-get-info --date)
 
 kosports_status_installed=$(kosports status installed)
@@ -11,12 +12,13 @@ echo "|    .  ___  ___  ___  _____ |   __||    . |  |  |";
 echo "|  |  ||  _|| -_|| .'||     ||__   ||  |  ||    -|";
 echo "|____/ |_|  |___||__,||_|_|_||_____||____/ |__|__|";
 echo "                                                  ";
-echo "DreamSDK ${dreamsdk_release} - Built on ${dreamsdk_date}";
+echo -e "\033[1;37;1;40mDreamSDK ${dreamsdk_release} (${dreamsdk_build})\033[0m - Built on ${dreamsdk_date}";
 echo "${kosports_status_installed} installed KallistiOS Ports of ${kosports_status_available} availables";
 echo "";
 echo "Run \"dreamsdk\" for help with commands and usage.";
 
 if [ ${kos_initialized} -eq 0 ]; then
   echo "";
-  echo "WARNING: KallistiOS isn't installed, you may run \"dreamsdk manage\" to fix that."
+  echo -e "\033[1;33;1;41m*** WARNING: KallistiOS is not properly installed/initialized ***\033[0m"; 
+  echo "Please run \"dreamsdk manage\" to fix the issue.";
 fi
