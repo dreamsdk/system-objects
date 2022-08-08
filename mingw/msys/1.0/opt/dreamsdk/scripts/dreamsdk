@@ -4,38 +4,37 @@ me=`basename "$0"`
 
 dreamsdk_release=$(dreamsdk-get-info --release)
 dreamsdk_date=$(dreamsdk-get-info --date)
+dreamsdk_build=$(dreamsdk-get-info --build)
 
 print_help_binary () {
-  _output_temp=$(command -v $1)
+  _command=$1
   _description=$2
-  if [ ! -z "$_output_temp" ]; then
-    echo "  $1: $2";
+  _output_temp=$(command -v ${_command})  
+  if [ ! -z "${_output_temp}" ]; then
+    echo -e "  \033[1;37;1;40m${_command}\033[0m: ${_description}";
   fi
 }
 
 print_help () {
-  echo ".-. .-. .-. .-. .  . .-. .-. . . ";
-  echo "|  )|(  |-  |-| |\/| \`-. |  )|<  ";
-  echo "\`-' ' ' \`-' \` ' '  \` \`-' \`-' ' \` ";
-  echo "DreamSDK ${dreamsdk_release} - Built on ${dreamsdk_date}";                             
+  echo -e "\033[1;37;1;40mDreamSDK ${dreamsdk_release} (${dreamsdk_build})\033[0m - Built on ${dreamsdk_date}";
   echo "";
-  echo "Easily manage DreamSDK directly on command-line.";
+  echo "Easily manage your DreamSDK installation directly on command-line.";
   echo "";
   echo "usage:";
   echo "  $me <command>";
   echo "";
   echo "command:";
-  echo "  help      : list all Sega Dreamcast specific commands availables";
-  echo "  manage    : open the DreamSDK Manager tool";
+  echo "  help      : list all Sega Dreamcast specific and available commands";
+  echo "  manage    : run DreamSDK Manager";
   echo "  manual    : open the DreamSDK Help file";
-  echo "  ports     : get information on KallistiOS Ports";
+  echo "  ports     : get information on available/installed KallistiOS Ports";
   echo "  version   : print DreamSDK version information";  
   exit 1
 }
 
 print_protip () {
   echo "";
-  echo "Protip: Try to use the \"dreamsdk $1 | less\" instruction.";
+  echo -e "\033[1;37;1;40mProtip:\033[0m Try to use the \"$me $1 | less\" instruction.";
 }
 
 command=$1
@@ -63,6 +62,7 @@ fi
 
 # manual
 if [ $cmd_manual -eq 1 ]; then
+  echo "Launching DreamSDK Help.";
   open "${dreamsdk_base}/dreamsdk.chm"
   exit 0
 fi
@@ -72,54 +72,55 @@ if [ $cmd_help -eq 1 ]; then
   echo "List of all useful commands/utilities included in DreamSDK";
   echo "";
   
-  echo "DreamSDK Specific Utilities for Sega Dreamcast";
-  print_help_binary "dc-tool" "run the Dreamcast Tool (dc-tool) with DreamSDK Manager settings";
-  print_help_binary "elf2bin" "convert a Sega Dreamcast ELF program to unscrambled BIN program";
-  print_help_binary "ipreader" "read Sega Dreamcast Bootstrap (IP.BIN) file properties";
-  print_help_binary "makedisc" "generate a Mil-CD (Selfboot/Autoboot) Sega Dreamcast disc image";
+  echo -e "\033[1;37;1;40mDreamSDK Specific Utilities for Sega Dreamcast\033[0m";
+  print_help_binary "dc-tool" "run Dreamcast Tool with DreamSDK Manager settings";
+  print_help_binary "elf2bin" "convert a Dreamcast ELF binary to unscrambled BIN";
+  print_help_binary "ipreader" "read Dreamcast bootstrap (IP.BIN) properties";
+  print_help_binary "makedisc" "generate a Mil-CD (Selfboot) Dreamcast image";
   echo "";
   
-  echo "DreamSDK Specific Utilities";
+  echo -e "\033[1;37;1;40mDreamSDK Specific Utilities\033[0m";
   print_help_binary "browse" "open the current directory in Windows Explorer";  
   print_help_binary "fastarp" "optimized wrapper for ARP";
   print_help_binary "fastping" "optimized wrapper for Ping";
   print_help_binary "mingw-get-info" "list all MinGW/MSYS installed packages";
+  print_help_binary "open" "opens a file/folder/URL as if you double-clicked on it";    
   echo "";
   
-  echo "KallistiOS Utilities"; 
+  echo -e "\033[1;37;1;40mKallistiOS Utilities\033[0m";
   print_help_binary "bin2c" "convert a binary file into a C integer array";
   print_help_binary "bin2o" "convert a binary data to an ELF object file";
   print_help_binary "dcbumpgen" "generate Sega Dreamcast PVR bumpmap textures";
   print_help_binary "genexports.sh" "generate header file from symbol";
   print_help_binary "genexportstubs.sh" "generate stub header file from symbol";
-  print_help_binary "genromfs" "create a romfs file system image used to store resources";
-  print_help_binary "kmgenc" "store images as Sega Dreamcast PVR textures in a KMG container";
-  print_help_binary "makeip" "creates homebrew Sega Dreamcast bootstrap files (i.e. IP.BIN)";
+  print_help_binary "genromfs" "create a romfs image used to store resources";
+  print_help_binary "kmgenc" "store images as PVR textures in a KMG container";
+  print_help_binary "makeip" "creates homebrew bootstrap files (IP.BIN)";
   print_help_binary "scramble" "generate 1ST_READ.BIN (scrambled binary) from binary";
-  print_help_binary "vqenc" "compress images using Vector Quantization (VQ) algorithm";
+  print_help_binary "vqenc" "compress images using Vector Quantization (VQ)";
   print_help_binary "wav2adpcm" "convert WAV audio data to ADPCM format";
   echo "";
   
-  echo "Additional Utilities for Sega Dreamcast";
-  print_help_binary "cdi4dc" "generate a Mil-CD image in Padus DiscJuggler format (CDI)";
+  echo -e "\033[1;37;1;40mAdditional Utilities for Sega Dreamcast\033[0m";
+  print_help_binary "cdi4dc" "generate a Mil-CD image in DiscJuggler format (CDI)";
   print_help_binary "lbacalc" "compute MSINFO value for generating mkisofs for CDDA";
-  print_help_binary "mds4dc" "generate a Mil-CD image in Alcohol 120% format (MDS)";
-  print_help_binary "pvr2png" "convert images from PowerVR (PVR) to Portable Network Graphics (PNG)";
+  print_help_binary "mds4dc" "generate a Mil-CD image in Alcohol 120 format (MDS)";
+  print_help_binary "pvr2png" "convert images from PVR format to PNG format";
   print_help_binary "vmutool" "manage vmu saves directly on computer";  
   echo "";
   
-  echo "Additional Utilities";
+  echo -e "\033[1;37;1;40mAdditional Utilities\033[0m";
   print_help_binary "cdda2wav" "highly portable CD-DA extraction tool";  
   print_help_binary "cdrecord" "burn discs directly from console";   
   print_help_binary "dirhash" "compute recursively the hash of a given directory";
   print_help_binary "elevate" "executes a command with UAC privilege elevation";
   print_help_binary "mkisofs" "generate ISO image";
-  print_help_binary "readcd" "a program to read CD/DVD/BD media with CD-clone features";
+  print_help_binary "readcd" "read or clone a CD/DVD/BD media";
   print_help_binary "showtxf" "display TXF font in a window";
   print_help_binary "ttf2txf" "build a TXF font from a TTF font";
   echo "";
   
-  echo "This list is only composed by utilities not directly linked to toolchains.";
+  echo "This list is only composed by DreamSDK and/or Sega Dreamcast specific tools.";
   echo "You can of course use common utilities (e.g., \"grep\", ...) that you can";
   echo "find in any *nix environment, that is why they are not listed here.";
   
@@ -128,8 +129,8 @@ fi
 
 # manage
 if [ $cmd_manage -eq 1 ]; then
-  echo "Starting DreamSDK Manager...";
-  dreamsdk-manager &
+  echo "Launching DreamSDK Manager.";
+  open "dreamsdk-manager"
 fi
 
 # ports
@@ -138,20 +139,27 @@ if [ $cmd_ports -eq 1 ]; then
   kosports_status_installed=$(kosports status installed)
   kosports_status_available=$(kosports status available)
   
-  echo "KallistiOS Ports:";
-  echo "";  
+  echo "List of all available/installed KallistiOS Ports:";
+  echo "All installed ports are marked by the \"*\" character.";
+  echo "";
   echo "${kosports_list}";
   echo "";
-  echo "${kosports_status_installed} installed KallistiOS Ports of ${kosports_status_available} availables";
+  echo -e "\033[1;37;1;40m${kosports_status_installed} installed KallistiOS Ports of ${kosports_status_available} availables\033[0m";
   echo "";
   echo "Enter \"dreamsdk manage\" and then choose the \"KallistiOS Ports\" tab if you want";
   echo "to install/update/uninstall KallistiOS Ports.";
+  echo "";
+  
+  echo -e "\033[1;31;1;40mNote: You can install KallistiOS Ports directly from the shell\033[0m";
+  echo -e "\033[1;31;1;40mbut it's recommended to install them from DreamSDK Manager.\033[0m";
+  echo "Indeed, DreamSDK Manager will install KallistiOS Ports and update also ";
+  echo "some internal files, mainly used for the IDE integration.";
   
   print_protip "ports";
 fi
 
 # version
 if [ $cmd_version -eq 1 ]; then
-  echo "DreamSDK ${dreamsdk_release}";
+  echo "DreamSDK ${dreamsdk_release} (${dreamsdk_build})";
   echo "Built on ${dreamsdk_date}";
 fi
