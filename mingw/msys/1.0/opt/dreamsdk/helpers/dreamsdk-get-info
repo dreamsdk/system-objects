@@ -8,11 +8,11 @@ fi
 param=$(echo "$1" | awk '{print tolower($0);}')
 
 if [ -z "$param" ]; then
-  echo "fatal: no supplied parameter, must be --release or --date.";
+  echo "fatal: no supplied parameter, must be --release, --build or --date.";
   exit 2;
 fi
 
-if [ ! "$param" == "--release" ] && [ ! "$param" == "--date" ]; then
+if [ ! "$param" == "--release" ] && [ ! "$param" == "--date" ] && [ ! "$param" == "--build" ]; then
   echo "fatal: option not recognized: $param";
   exit 3;
 fi
@@ -22,6 +22,12 @@ dreamsdk_version_file=${dreamsdk_base}/VERSION
 if [ "$param" == "--release" ]; then
   dreamsdk_release=$(awk -F "=" '/Release/ {print $2;}' ${dreamsdk_version_file});
   echo "$dreamsdk_release";
+  exit;
+fi
+
+if [ "$param" == "--build" ]; then
+  dreamsdk_build=$(awk -F "=" '/BuildNumber/ {print $2;}' ${dreamsdk_version_file});
+  echo "$dreamsdk_build";
   exit;
 fi
 
