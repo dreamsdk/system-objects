@@ -160,6 +160,7 @@ fi
 
 # version
 if [ $cmd_version -eq 1 ]; then
-  echo "DreamSDK ${dreamsdk_release} (${dreamsdk_build})";
-  echo "Built on ${dreamsdk_date}";
+  echo -e "\033[1;37;1;40mDreamSDK ${dreamsdk_release}\033[0m";
+  echo -e "\033[1;37;1;40mBuild Version:\033[0m ${dreamsdk_build}";
+  echo -e "\033[1;37;1;40mBuild Date:\033[0m ${dreamsdk_date}";
 fi
