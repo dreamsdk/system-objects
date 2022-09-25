@@ -16,8 +16,8 @@ use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2;}' ${dctool_conf})
 
 dreamcast_tool_not_configured() {
   echo "Dreamcast Tool (dc-tool) is not configured."
-  echo "Please run the DreamSDK Manager utility to set it up."
-  echo "Enter dreamsdk-manager at the command prompt to do that."  
+  echo "Please run DreamSDK Manager to do the configuration."
+  echo "You may type \"dreamsdk manage\" to do that."  
   exit 1
 }
 

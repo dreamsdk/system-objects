@@ -76,7 +76,7 @@ goto end
 
 :loader_undefined
 echo Dreamcast Tool (dc-tool) is not configured.
-echo Please run the DreamSDK Manager utility to set it up.
+echo Please run DreamSDK Manager to do the configuration.
 goto end
 
 :err_fastarp

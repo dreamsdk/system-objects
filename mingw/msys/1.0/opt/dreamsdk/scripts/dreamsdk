@@ -11,7 +11,7 @@ print_help_binary () {
   _description=$2
   _output_temp=$(command -v ${_command})  
   if [ ! -z "${_output_temp}" ]; then
-    echo -e "  \033[1;37;1;40m${_command}\033[0m: ${_description}";
+    echo -e "  \033[1;37;1;40m${_command}:\033[0m ${_description}";
   fi
 }
 
@@ -35,6 +35,10 @@ print_help () {
 print_protip () {
   echo "";
   echo -e "\033[1;37;1;40mProtip:\033[0m Try to use the \"$me $1 | less\" instruction.";
+}
+
+print_start () {
+  echo -e "\033[1;37;1;40mStarting:\033[0m $1";
 }
 
 command=$1
@@ -62,7 +66,7 @@ fi
 
 # manual
 if [ $cmd_manual -eq 1 ]; then
-  echo "Launching DreamSDK Help.";
+  print_start "DreamSDK Help";
   open "${dreamsdk_base}/dreamsdk.chm"
   exit 0
 fi
@@ -129,7 +133,7 @@ fi
 
 # manage
 if [ $cmd_manage -eq 1 ]; then
-  echo "Launching DreamSDK Manager.";
+  print_start "DreamSDK Manager";
   open "dreamsdk-manager"
 fi
 
