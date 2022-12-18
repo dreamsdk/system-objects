@@ -7,12 +7,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [R3] - YYYY-MM-DD
+## [R3] - 2022-12-DD
 
-Almost everything changed with that version.
+Almost everything changed with that version, this is a complete, long waited
+revamp of the previous package!
 
 ### Added
-- Experimental Ruby support! This uses mruby (lightweight Ruby).
+- **Experimental Ruby support!** This feature uses [mruby](https://mruby.org/) (lightweight Ruby).
 - Some useful links were added in the **Windows Start** menu.
 - Support of **CDFS** images in **Code::Blocks**: You have now the possibility 
   to simulate a virtual **CD-ROM** through an **ISO** file, when selecting the
@@ -64,6 +65,7 @@ Almost everything changed with that version.
   (UAC).  
 
 ### Updated
+- **MinTTY** is now the default shell (you can still use Windows Prompt).
 - **GNU Compiler Collection (GCC) for SuperH** and **AICA** can be `9.3.0`, as
   this version includes several fixes for `sh-elf` target, including some
   strange bugs like the C++ `concurrence_error`. You still have the choice to
@@ -79,6 +81,13 @@ Almost everything changed with that version.
 ### Removed
 - The **IPCreate** tool was removed, as the standard KallistiOS repository
   contains now the modernized **IP creator** (`makeip`) tool. 
+
+### Know bugs
+- Sometimes, on Windows Prompt, the `CTRL+C` command is not working properly.
+  This isn't really known why this happens, but it looks like on MinTTY, this 
+  issue isn't present.
+- Minor issue: On a fresh install, the IDE tab could be empty, you just have to
+  click on the `Refresh` button to populate it.
 
 ## [R2] - 2019-03-05
 ### Added
