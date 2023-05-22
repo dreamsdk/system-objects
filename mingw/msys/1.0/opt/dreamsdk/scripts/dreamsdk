@@ -88,6 +88,7 @@ if [ $cmd_help -eq 1 ]; then
   print_help_binary "fastarp" "optimized wrapper for ARP";
   print_help_binary "fastping" "optimized wrapper for Ping";
   print_help_binary "mingw-get-info" "list all MinGW/MSYS installed packages";
+  print_help_binary "mkdirln" "create/remove directory junction";
   print_help_binary "open" "opens a file/folder/URL as if you double-clicked on it";    
   echo "";
   
