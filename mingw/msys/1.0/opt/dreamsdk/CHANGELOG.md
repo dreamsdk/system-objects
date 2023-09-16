@@ -7,21 +7,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [R3] - 2022-12-DD
+## [R3] - 2023-09-DD
 
 Almost everything changed with that version, this is a complete, long waited
 revamp of the previous package!
 
 ### Added
-- **Experimental Ruby support!** This feature uses [mruby](https://mruby.org/) (lightweight Ruby).
+- **Experimental Ruby support!** This feature uses [mruby](https://mruby.org/)
+  (lightweight, embeddable Ruby). This feature is handled in DreamSDK Manager
+  through the Ruby tab. 
 - Some useful links were added in the **Windows Start** menu.
 - Support of **CDFS** images in **Code::Blocks**: You have now the possibility 
   to simulate a virtual **CD-ROM** through an **ISO** file, when selecting the
   appropriate option when creating a project in **Code::Blocks**.
-- Support for `libkosfat` addon library.
+- Support for `libkosfat/navi` addon libraries.
 - You have now the possibility to manage **Code::Blocks** in **DreamSDK Manager**.
+- Support for **Windows Terminal** (if available). 
 - The USB baud rates for **Dreamcast Tool Serial** are now supported.
-- Curl is now available.
+- Additional tools (e.g., `curl`) and libraries (e.g., `libelf`) are now available. 
 - This **CHANGELOG** file to hopefully serve as an evolving example of a
   standardized open source project **CHANGELOG**.
 
@@ -44,6 +47,10 @@ revamp of the previous package!
 - **MakeDisc**: The `bootstrap` parameter is now optional. It will try to detect
   the `IP.BIN` from the current directory or directly in the directory where the
   `1ST_READ.BIN` file is located.
+- It's now possible to select the toolchains you want to use directly from the
+  **DreamSDK Manager** instead of making your choice in the Setup. You have the
+  possibility to choose between **Legacy**, **Old Stable** and **Stable**
+  toolchains.     
 - The installation of **GNU Debugger (GDB) for SuperH** is better; and **Python**
   extensions may be enabled/disabled on user request (previously,
   **GDB for SuperH** was linked to **Python 2.7** only, so **Python** was
@@ -54,6 +61,8 @@ revamp of the previous package!
     - **GNU Awk**: From `3.1.7` to `4.0.1` (provided [here](https://github.com/sizious/msys-gawk))
     - **MinTTY**: From `1.0.3` to `3.5.0` (using official [MinTTY](https://mintty.github.io/) source)
     - **Wget**: From `1.12` to `1.19.4` (provided by [Jernej Simončič](https://eternallybored.org/misc/wget/))
+- The COM ports list used for **Dreamcast Tool Serial** is now dynamic and not
+  hardcoded anymore. 
 	
 ### Fixed
 - Some fixes in **Code::Blocks**:
@@ -61,15 +70,16 @@ revamp of the previous package!
     has been fixed.
   * Static library project type is now fully supported.
 - **MakeDisc**: An little cosmetic problem has been fixed.
-- Various fixes for **Windows 10+**; mainly related to User Account Control
-  (UAC).  
+- Tons of various fixes, including specific things for **Windows 10+**; mainly
+  related to User Account Control (UAC).  
 
 ### Updated
 - **MinTTY** is now the default shell (you can still use Windows Prompt).
-- **GNU Compiler Collection (GCC) for SuperH** and **AICA** can be `9.3.0`, as
-  this version includes several fixes for `sh-elf` target, including some
-  strange bugs like the C++ `concurrence_error`. You still have the choice to
-  stick with `4.7.4`. This can be changed later on **DreamSDK Manager**.
+- **GNU Compiler Collection (GCC) for SuperH** and **AICA** is now `4.7.4`
+  (**Legacy**), `9.5.0` for SuperH and `8.5.0` for ARM (**Old Stable**)
+  and `13.2.0` for SuperH (**Stable**). Stable is the toolchain selected by
+  default, but this one requires a modern OS (if you are on Windows XP, you can
+  select **Old Stable** at maximum). 
 - **GNU Compiler Collection (GCC) for Win32** is now `9.2.0`.
 - **GNU Debugger (GDB) for SuperH** is now `10.2`.
 - **DreamSDK Manager** was updated to display more useful information like
@@ -77,17 +87,17 @@ revamp of the previous package!
 - The help file was updated to reflect all the changes of this release.
 - The JPEG library (`libjpeg`) is now `9d`.
 - The PNG library (`libpng`) is now `1.6.37`.
+- Some optional tools before are now mandatory and installed by default (e.g., 
+  `img4dc`). 
 
 ### Removed
 - The **IPCreate** tool was removed, as the standard KallistiOS repository
   contains now the modernized **IP creator** (`makeip`) tool. 
 
 ### Know bugs
-- Sometimes, on Windows Prompt, the `CTRL+C` command is not working properly.
-  This isn't really known why this happens, but it looks like on MinTTY, this 
-  issue isn't present.
-- Minor issue: On a fresh install, the IDE tab could be empty, you just have to
-  click on the `Refresh` button to populate it.
+- Sometimes the `CTRL+C` command is not working properly (no effect instead of
+  killing the current process). This isn't really known why this happens, it
+  looks like this issue is in the original MSYS tool as well.
 
 ## [R2] - 2019-03-05
 ### Added
