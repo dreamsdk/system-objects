@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo -e "\033[1;33;1;41mipcreate: this obsolete tool has been removed, it is now replaced by: makeip\033[0m"
+exit 127
+
