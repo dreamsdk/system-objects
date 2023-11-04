@@ -1,16 +1,16 @@
 diff -ruN mingw/etc/profile dreamsdk/etc/profile
 --- mingw/etc/profile	2009-07-11 19:34:34 +0000
-+++ dreamsdk/etc/profile	2023-10-04 20:57:49 +0000
++++ dreamsdk/etc/profile	2023-11-03 23:57:30 +0000
 @@ -4,7 +4,7 @@
  # 
  #         File:	profile
  #  Description:	Shell environment initialization script
 -# Last Revised:	2002.05.04
-+# Last Revised:	2023.10.04 (DreamSDK)
++# Last Revised:	2023.11.04 (DreamSDK)
  
  if [ -z "$MSYSTEM" ]; then
    MSYSTEM=MINGW32
-@@ -56,5 +56,110 @@
+@@ -56,5 +56,116 @@
  
  alias clear=clsb
  
@@ -54,6 +54,12 @@ diff -ruN mingw/etc/profile dreamsdk/etc/profile
 +export PS1='\[\033]0;${ENVIRONMENT_NAME}:\w\007
 +\033[32m\]\u@\h \[\033[33m\w\033[0m\]
 +$ '
++
++# Bash fix: remove /tmp/sh-thd-* file if any
++# This is a workaround for a (small) bug in Bash for MSYS
++rm /tmp/sh-thd-* > /dev/null 2>&1
++
++################################################################################
 +
 +# KallistiOS initialization script
 +export environ=$toolchains_base/kos/environ.sh
