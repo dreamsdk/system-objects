@@ -1,0 +1,20 @@
+maybe_init_dreamsdk ()
+{
+  # Set MSYSTEM default to "MINGW64" instead of "MSYS"
+  local MSYSTEMFILE=/etc/msystem
+  if grep -Fq "{MSYSTEM:-MSYS}" "${MSYSTEMFILE}";
+  then
+    sed -i 's/{MSYSTEM:-MSYS}/{MSYSTEM:-MINGW64}/' "${MSYSTEMFILE}"
+  fi
+  
+  # Set MSYS2_PATH_TYPE default to "inherit" instead of "minimal"
+  local PROFILEFILE=/etc/profile
+  if grep -Fq "{MSYS2_PATH_TYPE:-minimal}" "${PROFILEFILE}";
+  then
+    sed -i 's/{MSYS2_PATH_TYPE:-minimal}/{MSYS2_PATH_TYPE:-inherit}/' "${PROFILEFILE}"
+    # This is not really nice, as this will close the shell the first time
+    logout
+  fi
+}
+
+maybe_init_dreamsdk
