@@ -1,12 +1,27 @@
 maybe_init_dreamsdk ()
 {
+  # Hide useless MSYS2 directories/files but without removing them, as this is
+  # better supported by pacman while upgrading packages  
+  local USELESSOBJECTCHECKFILE=/mingw64.exe
+  if [[ -e "$USELESSOBJECTCHECKFILE" ]]; then
+    local HIDDENFLAG=$(attrib "$USELESSOBJECTCHECKFILE" | cut -c 5)
+    if [[ "$HIDDENFLAG" != "H" ]]; then
+      local USELESSOBJECTS=("/autorebase.bat" "/msys2_shell.cmd" "/clang32" "/clang32.exe" "/clang32.ico" "/clang32.ini" "/clang64" "/clang64.exe" "/clang64.ico" "/clang64.ini" "/clangarm64" "/clangarm64.exe" "/clangarm64.ico" "/clangarm64.ini" "/mingw32" "/mingw32.exe" "/mingw32.ico" "/mingw32.ini" "/mingw64.exe" "/mingw64.ico" "/mingw64.ini" "/msys2.exe" "/msys2.ico" "/msys2.ini" "/ucrt64" "/ucrt64.exe" "/ucrt64.ico" "/ucrt64.ini")
+      for ELEMENT in "${USELESSOBJECTS[@]}"; do    
+        if [[ -e "$ELEMENT" ]]; then
+          attrib +h "$ELEMENT"
+        fi
+      done
+    fi
+  fi
+
   # Set MSYSTEM default to "MINGW64" instead of "MSYS"
   local MSYSTEMFILE=/etc/msystem
   if grep -Fq "{MSYSTEM:-MSYS}" "${MSYSTEMFILE}";
   then
     sed -i 's/{MSYSTEM:-MSYS}/{MSYSTEM:-MINGW64}/' "${MSYSTEMFILE}"
   fi
-  
+
   # Set MSYS2_PATH_TYPE default to "inherit" instead of "minimal"
   local PROFILEFILE=/etc/profile
   if grep -Fq "{MSYS2_PATH_TYPE:-minimal}" "${PROFILEFILE}";
