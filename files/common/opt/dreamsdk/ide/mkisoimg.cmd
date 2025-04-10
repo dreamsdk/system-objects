@@ -8,9 +8,11 @@ set ScriptPath=%~dp0
 set ScriptPath=%ScriptPath:~0,-1%
 
 set MakeIsoFileSystem=%ScriptPath%\..\..\..\bin\mkisofs.exe
+if not exist %MakeIsoFileSystem% set MakeIsoFileSystem=%ScriptPath%\..\..\..\usr\bin\mkisofs.exe
 if not exist %MakeIsoFileSystem% goto error_mkisofs
 
 set DirHash=%ScriptPath%\..\..\..\bin\dirhash.exe
+if not exist %DirHash% set DirHash=%ScriptPath%\..\..\..\usr\bin\dirhash.exe
 if not exist %DirHash% goto error_dirhash
 
 rem Project path

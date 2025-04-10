@@ -10,6 +10,7 @@ set Runner=%ScriptPath%\..\dreamsdk-runner.exe
 if not exist %Runner% goto error_runner
 
 set DirHash=%ScriptPath%\..\..\..\bin\dirhash.exe
+if not exist %DirHash% set DirHash=%ScriptPath%\..\..\..\usr\bin\dirhash.exe
 if not exist %DirHash% goto error_dirhash
 
 set ProjectPath=%1
