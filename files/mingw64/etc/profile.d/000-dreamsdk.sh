@@ -59,16 +59,19 @@ export PATH="${PATH}:${dreamsdk_base}/scripts"
 # Initialize KallistiOS
 export kos_initialized=0
 if [ -f "${environ}" ]; then
-  source "${environ}"
-  export kos_initialized=1	  
-fi
-
-# Add all additional KallistiOS utilities in PATH
-if [ $kos_initialized -eq 1 ]; then
+  # Add all additional KallistiOS utilities in PATH
+  # This must be executed first before "environ.sh" as we add some custom
+  # wrappers (i.e., "kos-cc") to be usable from IDE.
   for d in ${kos_utilities}/*/ ; do
     [ -L "${d%/}" ] && continue
     export PATH="${PATH}:$d"
   done
+
+  # Load KallistiOS environment file  
+  source "${environ}"
+  
+  # Mark KallistiOS as initialized  
+  export kos_initialized=1	  
 fi
 
 # Change to the passed directory if needed...
