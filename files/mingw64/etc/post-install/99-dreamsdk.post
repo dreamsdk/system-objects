@@ -1,20 +1,56 @@
 maybe_init_dreamsdk ()
 {
   # Hide useless MSYS2 directories/files but without removing them, as this is
-  # better supported by pacman while upgrading packages  
-  local USELESSOBJECTCHECKFILE=/mingw64.exe
-  if [[ -e "$USELESSOBJECTCHECKFILE" ]]; then
-    local HIDDENFLAG=$(attrib "$USELESSOBJECTCHECKFILE" | cut -c 5)
-    if [[ "$HIDDENFLAG" != "H" ]]; then
-      local USELESSOBJECTS=("/autorebase.bat" "/msys2_shell.cmd" "/clang32" "/clang32.exe" "/clang32.ico" "/clang32.ini" "/clang64" "/clang64.exe" "/clang64.ico" "/clang64.ini" "/clangarm64" "/clangarm64.exe" "/clangarm64.ico" "/clangarm64.ini" "/mingw32" "/mingw32.exe" "/mingw32.ico" "/mingw32.ini" "/mingw64.exe" "/mingw64.ico" "/mingw64.ini" "/msys2.exe" "/msys2.ico" "/msys2.ini" "/ucrt64" "/ucrt64.exe" "/ucrt64.ico" "/ucrt64.ini")
+  # better supported by pacman while upgrading packages
+  _hide_useless_objects ()
+  {
+    # File used to track the last known modification timestamp of pacman.log
+    local PACMAN_LOG="/var/log/pacman.log"
+    local LASTDATEFILE="/etc/dreamsdk/pacman.stamp"
+
+    # Get the current timestamp of pacman.log (format: YYYYMMDDHHMMSS)
+    if [[ -e "$PACMAN_LOG" ]]; then
+      local CURRENTDATETIME=$(stat -c %y "$PACMAN_LOG" | awk '{print $1 $2}' | sed 's/[-:]//g' | cut -c1-14)
+    else
+      # If pacman.log doesn't exist, we force the operation and use a placeholder date
+      local CURRENTDATETIME="FORCE"
+    fi
+
+    # Read the last saved timestamp if it exists
+    if [[ -f "$LASTDATEFILE" ]]; then
+      local LASTDATETIME=$(cat "$LASTDATEFILE")
+    else
+      local LASTDATETIME=""
+    fi
+
+    # If pacman.log is new or updated, or does not exist at all, run the operation
+    if [[ "$CURRENTDATETIME" != "$LASTDATETIME" ]]; then
+      # Update the stored timestamp (unless it's a forced run)
+      if [[ "$CURRENTDATETIME" != "FORCE" ]]; then
+        echo "$CURRENTDATETIME" > "$LASTDATEFILE"
+      fi
+
+      # Hide MSYS2-related files and directories if they exist
+      local USELESSOBJECTS=(
+        "/autorebase.bat" "/msys2_shell.cmd"
+        "/clang32" "/clang32.exe" "/clang32.ico" "/clang32.ini"
+        "/clang64" "/clang64.exe" "/clang64.ico" "/clang64.ini"
+        "/clangarm64" "/clangarm64.exe" "/clangarm64.ico" "/clangarm64.ini"
+        "/mingw32" "/mingw32.exe" "/mingw32.ico" "/mingw32.ini"
+        "/mingw64.exe" "/mingw64.ico" "/mingw64.ini"
+        "/msys2.exe" "/msys2.ico" "/msys2.ini"
+        "/ucrt64" "/ucrt64.exe" "/ucrt64.ico" "/ucrt64.ini"
+      )
+
       for ELEMENT in "${USELESSOBJECTS[@]}"; do    
         if [[ -e "$ELEMENT" ]]; then
           attrib +h "$ELEMENT"
         fi
       done
     fi
-  fi
-
+  }
+  _hide_useless_objects
+  
   # Set MSYSTEM default to "MINGW64" instead of "MSYS"
   local MSYSTEMFILE=/etc/msystem
   if grep -Fq "{MSYSTEM:-MSYS}" "${MSYSTEMFILE}";
