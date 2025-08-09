@@ -1,0 +1,9 @@
+msys64/dev/mqueue
+msys64/dev/shm
+msys64/etc/pacman.d/gnupg
+msys64/etc/hosts
+msys64/etc/mtab
+msys64/etc/networks
+msys64/etc/protocols
+msys64/etc/services
+msys64/home/Katana
