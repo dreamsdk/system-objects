@@ -165,7 +165,12 @@ fi
 
 # version
 if [ $cmd_version -eq 1 ]; then
+  local foundation=MinGW-w64/MSYS2
+  if [ "${MSYS_LEGACY:-0}" = "1" ]; then
+    foundation=MinGW/MSYS
+  fi
   echo -e "\033[1;37;1;40mDreamSDK ${dreamsdk_release}\033[0m";
   echo -e "\033[1;37;1;40mBuild Version:\033[0m ${dreamsdk_build}";
   echo -e "\033[1;37;1;40mBuild Date:\033[0m ${dreamsdk_date}";
+  echo -e "\033[1;37;1;40mFoundation:\033[0m ${foundation}";
 fi
