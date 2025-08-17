@@ -26,6 +26,23 @@ if [ "$(which cmake)" != "/usr/bin/cmake" ]; then
   export CMAKE_GENERATOR="MSYS Makefiles"
 fi
 
+# Updated command prompt (this overloads the default MinGW prompt)
+export PS1='\[\033]0;${ENVIRONMENT_NAME}:\w\007
+\033[32m\]\u@\h \[\033[33m\w\033[0m\]
+$ '
+
+################################################################################
+
+# MinGW/MSYS specific code
+if [ "${MSYS_LEGACY:-0}" = "1" ]; then
+  # Handle external updated Wget
+  export WGETRC=/etc/wgetrc
+
+  # Bash fix: remove /tmp/sh-thd-* file if any
+  # This is a workaround for a (small) bug in Bash for MSYS
+  rm /tmp/sh-thd-* > /dev/null 2>&1
+fi
+
 ################################################################################
 
 # DreamSDK base directory
@@ -40,13 +57,6 @@ export dreamsdk_conf=/etc/dreamsdk/dreamsdk.conf
 
 # Dreamcast Tool configuration file
 export dctool_conf=/etc/dreamsdk/dc-tool.conf
-
-################################################################################
-
-# Updated command prompt (this overloads the default MinGW prompt)
-export PS1='\[\033]0;${ENVIRONMENT_NAME}:\w\007
-\033[32m\]\u@\h \[\033[33m\w\033[0m\]
-$ '
 
 ################################################################################
 
