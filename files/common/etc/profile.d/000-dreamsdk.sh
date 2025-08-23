@@ -22,7 +22,8 @@ export LC_MONETARY="en_US.UTF-8"
 export LC_MESSAGES="en_US.UTF-8"
 
 # CMake support
-if [ "$(which cmake)" != "/usr/bin/cmake" ]; then
+cmake_path=$(command -v cmake)
+if [ "$cmake_path" ] && [ "$cmake_path" != "/usr/bin/cmake" ]; then
   export CMAKE_GENERATOR="MSYS Makefiles"
 fi
 
