@@ -165,7 +165,7 @@ fi
 
 # version
 if [ $cmd_version -eq 1 ]; then
-  local foundation=MinGW-w64/MSYS2
+  foundation=MinGW-w64/MSYS2
   if [ "${MSYS_LEGACY:-0}" = "1" ]; then
     foundation=MinGW/MSYS
   fi
