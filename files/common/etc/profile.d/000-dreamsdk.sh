@@ -1,4 +1,4 @@
-# /etc/profile.d/dreamsdk.sh: sourced by /etc/profile.
+# /etc/profile.d/000-dreamsdk.sh: sourced by /etc/profile.
 
 ################################################################################
 #    ___                     _______  __ __
@@ -75,6 +75,13 @@ export PATH="${PATH}:${dreamsdk_base}/scripts"
 # Initialize KallistiOS
 export kos_initialized=0
 if [ -f "${environ}" ]; then
+  # Add the build wrappers directory to the beginning of the path, if
+  # "$_EXTERNAL_COMMAND" is passed. This avoids a circular reference to
+  # "kos-cc" because there is a call in "environ.sh".
+  if [ ! -z "$_EXTERNAL_COMMAND" ]; then
+    export PATH="${kos_utilities}/build_wrappers:${PATH}"
+  fi
+
   # Add all additional KallistiOS utilities in PATH
   # This must be executed first before "environ.sh" as we add some custom
   # wrappers (i.e., "kos-cc") to be usable from IDE.
