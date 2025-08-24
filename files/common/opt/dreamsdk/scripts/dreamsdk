@@ -67,7 +67,7 @@ fi
 # manual
 if [ $cmd_manual -eq 1 ]; then
   print_start "DreamSDK Help";
-  open "${dreamsdk_base}/dreamsdk.chm"
+  open "${DREAMSDK_BASE}/dreamsdk.chm"
   exit 0
 fi
 

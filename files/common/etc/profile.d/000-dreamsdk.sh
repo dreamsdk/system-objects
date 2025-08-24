@@ -51,63 +51,62 @@ fi
 ################################################################################
 
 # DreamSDK base directory
-export dreamsdk_base=/opt/dreamsdk
-export PATH="${PATH}:${dreamsdk_base}"
+export DREAMSDK_BASE=/opt/dreamsdk
 
 # Toolchains base directory
-export toolchains_base=/opt/toolchains/dc
+export DREAMSDK_BASE_TOOLCHAINS=/opt/toolchains/dc
 
-# DreamSDK configuration file
-export dreamsdk_conf=/etc/dreamsdk/dreamsdk.conf
-
-# Dreamcast Tool configuration file
-export dctool_conf=/etc/dreamsdk/dc-tool.conf
+# DreamSDK configuration files
+export DREAMSDK_CFG=/etc/dreamsdk/dreamsdk.conf
+export DREAMSDK_CFG_DCTOOL=/etc/dreamsdk/dc-tool.conf
 
 ################################################################################
 
-# KallistiOS initialization script
-export environ=$toolchains_base/kos/environ.sh
-
-# KallistiOS utilities directory
-export kos_utilities=$toolchains_base/kos/utils
-
 # Add additional directories in the PATH
-export PATH="${PATH}:${dreamsdk_base}/addons"
-export PATH="${PATH}:${dreamsdk_base}/helpers"
-export PATH="${PATH}:${dreamsdk_base}/scripts"
+export PATH="${PATH}:${DREAMSDK_BASE}:${DREAMSDK_BASE}/addons:${DREAMSDK_BASE}/helpers:${DREAMSDK_BASE}/scripts"
+
+################################################################################
 
 # Initialize KallistiOS
-export kos_initialized=0
-if [ -f "${environ}" ]; then
-  # Add the build wrappers directory to the beginning of the path, if
-  # "$_EXTERNAL_COMMAND" is passed. This avoids a circular reference to
-  # "kos-cc" because there is a call in "environ.sh".
+export DREAMSDK_KOS_INITIALIZED=0
+kos_environ="${DREAMSDK_BASE_TOOLCHAINS}/kos/environ.sh"
+if [ -f "${kos_environ}" ]; then
+  # KallistiOS utilities directory
+  kos_utils_dir="${DREAMSDK_BASE_TOOLCHAINS}/kos/utils"
+
+  # Add the build wrappers directory to the beginning of PATH, if
+  # "$_EXTERNAL_COMMAND" is passed. This avoids a circular reference to "kos-cc"
+  # because there is a call in "environ.sh".
   if [ ! -z "$_EXTERNAL_COMMAND" ]; then
-    export PATH="${kos_utilities}/build_wrappers:${PATH}"
+    export PATH="${kos_utils_dir}/build_wrappers:${PATH}"
   fi
 
   # Add all additional KallistiOS utilities in PATH
-  KOS_UTILITIES_PATH=""
-  for d in ${kos_utilities}/*/ ; do
+  kos_utils_path=""
+  for d in ${kos_utils_dir}/*/ ; do
     d="${d%/}"
     [ -L "$d" ] && continue    
     # Check if the directory is not in the PATH already
     if [[ ":$PATH:" != *":$d:"* ]]; then
-      if [ -n "$KOS_UTILITIES_PATH" ]; then
-        KOS_UTILITIES_PATH="${KOS_UTILITIES_PATH}:$d"
+      if [ -n "$kos_utils_path" ]; then
+        kos_utils_path="${kos_utils_path}:$d"
       else
-        KOS_UTILITIES_PATH="$d"
+        kos_utils_path="$d"
       fi
     fi
   done
-  [ -n "$KOS_UTILITIES_PATH" ] && export PATH="${PATH}:${KOS_UTILITIES_PATH}"
+  [ -n "$kos_utils_path" ] && export PATH="${PATH}:${kos_utils_path}"
+  unset kos_utils_path
+  unset kos_utils_dir  
 
   # Load KallistiOS environment file  
-  source "${environ}"
+  source "${kos_environ}"
 
   # Mark KallistiOS as initialized  
-  export kos_initialized=1	  
+  export DREAMSDK_KOS_INITIALIZED=1	  
 fi
+
+################################################################################
 
 # Change to the passed directory if needed...
 if [ -n "$_WORKING_DIRECTORY" ]; then
@@ -122,7 +121,7 @@ if [ -z "$_EXTERNAL_COMMAND" ]; then
   if [ -z "$_WORKING_DIRECTORY" ]; then    
     cd "$HOME"
   fi
-  
+
   # Display DreamSDK welcome banner
   dreamsdk-banner  
 else
@@ -156,7 +155,7 @@ $_EXTERNAL_COMMAND\n
   }
 
   run
-  
+
   if [ -n "$_EXITCODE" ]; then
     echo "${ret_val}" > "$_EXITCODE"
   fi

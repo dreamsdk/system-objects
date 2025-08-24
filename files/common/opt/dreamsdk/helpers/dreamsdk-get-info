@@ -1,38 +1,48 @@
 #!/usr/bin/env bash
 
-if [ -z "$dreamsdk_base" ]; then
-  echo "fatal: \$dreamsdk_base is undefined!";
-  exit 1;
+# Check DREAMSDK_BASE environment variable
+if [ -z "${DREAMSDK_BASE}" ]; then
+  echo "fatal: \$DREAMSDK_BASE is undefined!" >&2
+  exit 1
 fi
 
-param=$(echo "$1" | awk '{print tolower($0);}')
+# Convert parameter to lowercase
+param=$(echo "$1" | awk '{print tolower($0)}')
 
-if [ -z "$param" ]; then
-  echo "fatal: no supplied parameter, must be --release, --build or --date.";
-  exit 2;
+# Validate parameter
+if [ -z "${param}" ]; then
+  echo "fatal: no supplied parameter, must be --release, --build or --date." >&2
+  exit 2
 fi
 
-if [ ! "$param" == "--release" ] && [ ! "$param" == "--date" ] && [ ! "$param" == "--build" ]; then
-  echo "fatal: option not recognized: $param";
-  exit 3;
+case "${param}" in
+  "--release"|"--build"|"--date")
+    # Valid parameter
+    ;;
+  *)
+    echo "fatal: invalid option: ${param}" >&2
+    exit 3
+    ;;
+esac
+
+# Version file path
+dreamsdk_version_file="${DREAMSDK_BASE}/VERSION"
+
+# Check if VERSION file exists
+if [ ! -f "${dreamsdk_version_file}" ]; then
+  echo "fatal: VERSION file not found: ${dreamsdk_version_file}" >&2
+  exit 4
 fi
 
-dreamsdk_version_file=${dreamsdk_base}/VERSION
-
-if [ "$param" == "--release" ]; then
-  dreamsdk_release=$(awk -F "=" '/Release/ {print $2;}' ${dreamsdk_version_file});
-  echo "$dreamsdk_release";
-  exit;
-fi
-
-if [ "$param" == "--build" ]; then
-  dreamsdk_build=$(awk -F "=" '/BuildNumber/ {print $2;}' ${dreamsdk_version_file});
-  echo "$dreamsdk_build";
-  exit;
-fi
-
-if [ "$param" == "--date" ]; then
-  dreamsdk_date=$(awk -F "=" '/Date/ {print $2;}' ${dreamsdk_version_file})
-  echo "$dreamsdk_date";
-  exit;
-fi
+# Process according to parameter
+case "${param}" in
+  "--release")
+    awk -F "=" '/Release/ {print $2}' "${dreamsdk_version_file}"
+    ;;
+  "--build")
+    awk -F "=" '/BuildNumber/ {print $2}' "${dreamsdk_version_file}"
+    ;;
+  "--date")
+    awk -F "=" '/Date/ {print $2}' "${dreamsdk_version_file}"
+    ;;
+esac

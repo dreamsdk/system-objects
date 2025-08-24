@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
-if [ -z "$toolchains_base" ]; then
-  echo "fatal: \$toolchain_base is undefined!";
+if [ -z "${DREAMSDK_BASE_TOOLCHAINS}" ]; then
+  echo "fatal: \$DREAMSDK_BASE_TOOLCHAINS is undefined!";
   exit;
 fi
 
-kos_ports_base=$toolchains_base/kos-ports
-example_dir=${kos_ports_base}/examples
-include_dir=${kos_ports_base}/include
-lib_dir=${kos_ports_base}/lib
+kos_ports_base="${DREAMSDK_BASE_TOOLCHAINS}/kos-ports"
+example_dir="${kos_ports_base}/examples"
+include_dir="${kos_ports_base}/include"
+lib_dir="${kos_ports_base}/lib"
 
-if [ -d ${example_dir} ]; then
-  rm -rf ${example_dir} 
+if [ -d "${example_dir}" ]; then
+  rm -rf "${example_dir}" 
 fi
 
-if [ -d ${include_dir} ]; then
-  rm -rf ${include_dir}
+if [ -d "${include_dir}" ]; then
+  rm -rf "${include_dir}"
 fi
 
-if [ -d ${lib_dir} ]; then
-  rm -rf ${lib_dir}
+if [ -d "${lib_dir}" ]; then
+  rm -rf "${lib_dir}"
 fi
