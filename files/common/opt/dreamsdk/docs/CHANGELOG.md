@@ -7,6 +7,95 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [R4] - 2025-08-30
+
+This release is the result of a 2-year wait, sorry about that. However, this is
+an important release because it brings very important structural changes,
+including the ability to choose between the MinGW/MSYS environment (the legacy
+one) and the modern MinGW-w64/MSYS2 environment. The built-in toolchains have
+been recompiled recently and many profiles are provided.
+
+Please note, Windows XP is still supported using the MinGW/MSYS foundation.
+
+### Added
+- **New foundation based on MinGW-w64/MSYS2**. This is only available from
+  Windows 10 x64 and significantly increases the size of the environment,
+   however, it significantly increases compatibility with KallistiOS and modern
+  development in general.
+- **Code::Blocks 25.03** is now supported.
+- In **DreamSDK Manager**, there is an automatic **Check for update** feature
+  which triggers every 7 days. It could be disabled as well in the tool.
+- In **DreamSDK Manager**, it's now possible to check which external tool the
+  environment is using (i.e., `git`, `python`, `meson`, `ruby` and `cmake`).
+- The KallistiOS wrappers were converted into real Windows binaries, making them
+  available to Batch files or IDEs (e.g., `kos-cc.exe`, `dc-arm-cc.exe`). Those
+  are based on **DreamSDK Runner**.
+- Support for **CMake** and **Meson**.
+- The `kosports` helper supports the `refresh` operation now; this one updates
+  the referential files used in the **Code::Blocks** integration while creating
+  a project using the **DreamSDK Wizard** in Code::Blocks.
+
+### Improved
+- All RTF documentation has been migrated to HTML as Wordpad isn't provided
+  anymore on Windows 11 (e.g., this applies to the **Getting Started** guide).
+- In **DreamSDK Manager**, when the offline versions of repositories are used,
+  the exact version number, including source host, is displayed.
+- In **DreamSDK Manager**, the **CMake** builds are now properly tracked by the
+  progress bar.
+
+### Fixed
+- In **DreamSDK Manager**, the KallistiOS library was not properly detected;
+  same for the KallistiOS changelog.
+- The ABI message displayed in DreamSDK R3 has been fixed (by recompiling the
+  SuperH toolchains).
+- Various issues in thread management in **DreamSDK Manager** that could happens
+  while cancelling a pending operation.
+- Various issues in installation of the **Code::Blocks** integration.
+- **Code::Blocks** Wizard integration has been fixed (some libraries were not
+  properly added while creating a project using the DreamSDK Wizard).
+
+### Updated
+- All **SuperH** toolchains were updated. The profile names are now aligned with
+  KallistiOS (i.e., **Stable** profile has the same meaning in DreamSDK and in
+  KallistiOS). Depending of the chosen foundation (i.e., MinGW/MSYS or
+  MinGW-w64/MSYS2), the choice will be:
+
+  - For MinGW-w64/MSYS2 (x64):
+      
+	  - **Stable**, i.e., GCC `13.2.0` with Newlib `4.3.0.20230120`.
+	  - **13.4.0**, with Newlib `4.5.0.20241231`.
+	  - **14.3.0**, with Newlib `4.5.0.20241231`.
+	  - **15.1.0**, with Newlib `4.5.0.20241231`.
+
+  - For MinGW/MSYS (x86):
+  
+     - **10.5.0**, with Newlib `4.3.0.20230120`.
+	 - **9.5.0-winxp**, with Newlib `4.3.0.20230120`.
+	 
+- **GNU Debugger (GDB)** has been updated to `16.3` for MinGW-w64/MSYS2 (x64).
+  It's possible to choose between no Python (disabled) or Python `3.13`.
+- In the `profile.d` directory (which transform a standard MinGW/MSYS or
+  MinGW-w64/MSYS2 into DreamSDK), the script has been updated to manage both
+  foundation environment with a single code base. This applies in different
+  part of DreamSDK as well.
+- Various refactorings that improve stability (e.g., `enumcom`, the component
+  listing COM ports, is now a real library instead of an executable embedded
+  in DreamSDK).
+
+### Removed
+- The parts of DreamSDK supporting **mruby** have been removed since mruby is
+  now an official port in kos-ports.
+- `elf2bin` was removed as its now officially in KallistiOS.
+- **Subversion** (SVN) is not supported anymore.
+
+### Known bugs
+- In **Code::Blocks**, when creating a project with the DreamSDK Wizard, during
+  the first generation it is necessary to select a build configuration (Debug
+  or Release) manually in order to enable the correct mechanisms in
+  Code::Blocks. This only happens when creating the project.
+- The provided help (**DreamSDK Help**) has not yet been updated, this will be
+  done later in a future release.
+
 ## [R3] - 2023-11-04
 
 Almost everything changed with that version, this is a complete, long waited
