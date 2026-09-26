@@ -8,26 +8,14 @@ maybe_init_dreamsdk ()
     local PACMAN_LOG="/var/log/pacman.log"
     local LASTDATEFILE="/etc/dreamsdk/pacman.stamp"
 
-    # Get the current timestamp of pacman.log (format: YYYYMMDDHHMMSS)
-    if [[ -e "$PACMAN_LOG" ]]; then
-      local CURRENTDATETIME=$(stat -c %y "$PACMAN_LOG" | awk '{print $1 $2}' | sed 's/[-:]//g' | cut -c1-14)
-    else
-      # If pacman.log doesn't exist, we force the operation and use a placeholder date
-      local CURRENTDATETIME="FORCE"
-    fi
-
-    # Read the last saved timestamp if it exists
-    if [[ -f "$LASTDATEFILE" ]]; then
-      local LASTDATETIME=$(cat "$LASTDATEFILE")
-    else
-      local LASTDATETIME=""
-    fi
-
-    # If pacman.log is new or updated, or does not exist at all, run the operation
-    if [[ "$CURRENTDATETIME" != "$LASTDATETIME" ]]; then
-      # Update the stored timestamp (unless it's a forced run)
-      if [[ "$CURRENTDATETIME" != "FORCE" ]]; then
-        echo "$CURRENTDATETIME" > "$LASTDATEFILE"
+    # If pacman.log is new or updated (i.e. newer than the stamp file), or does
+    # not exist at all, run the operation. This check uses Bash builtins only,
+    # as spawning processes is slow on Windows and this runs on each login.
+    if [[ ! -e "$PACMAN_LOG" || ! -f "$LASTDATEFILE" || "$PACMAN_LOG" -nt "$LASTDATEFILE" ]]; then
+      # Update the stored timestamp (format: YYYYMMDDHHMMSS), unless pacman.log
+      # doesn't exist: in that case, the operation is forced on each login
+      if [[ -e "$PACMAN_LOG" ]]; then
+        stat -c %y "$PACMAN_LOG" | awk '{print $1 $2}' | sed 's/[-:]//g' | cut -c1-14 > "$LASTDATEFILE"
       fi
 
       # Hide MSYS2-related files and directories if they exist
@@ -50,17 +38,26 @@ maybe_init_dreamsdk ()
     fi
   }
   _hide_useless_objects
-  
+
+  # Check if a file contains a string, using Bash builtins only (like above,
+  # this avoids spawning a "grep" process on each login)
+  _file_contains ()
+  {
+    local CONTENT
+    IFS= read -r -d '' CONTENT < "$1"
+    [[ "$CONTENT" == *"$2"* ]]
+  }
+
   # Set MSYSTEM default to "MINGW64" instead of "MSYS"
   local MSYSTEMFILE=/etc/msystem
-  if grep -Fq "{MSYSTEM:-MSYS}" "${MSYSTEMFILE}";
+  if _file_contains "${MSYSTEMFILE}" "{MSYSTEM:-MSYS}";
   then
     sed -i 's/{MSYSTEM:-MSYS}/{MSYSTEM:-MINGW64}/' "${MSYSTEMFILE}"
   fi
 
   # Set MSYS2_PATH_TYPE default to "inherit" instead of "minimal"
   local PROFILEFILE=/etc/profile
-  if grep -Fq "{MSYS2_PATH_TYPE:-minimal}" "${PROFILEFILE}";
+  if _file_contains "${PROFILEFILE}" "{MSYS2_PATH_TYPE:-minimal}";
   then
     sed -i 's/{MSYS2_PATH_TYPE:-minimal}/{MSYS2_PATH_TYPE:-inherit}/' "${PROFILEFILE}"
     # This is not really nice, as this will close the shell the first time

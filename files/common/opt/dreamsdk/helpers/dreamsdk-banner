@@ -1,11 +1,42 @@
 #!/usr/bin/env bash
 
-dreamsdk_release=$(dreamsdk-get-info --release 2>/dev/null) || dreamsdk_release="(Unknown Release)"
-dreamsdk_build=$(dreamsdk-get-info --build)
-dreamsdk_date=$(dreamsdk-get-info --date)
+# Pure Bash is used as much as possible in this script to avoid spawning
+# processes, as this is very slow on Windows and this script is called at
+# shell startup. Only Bash 3.1 features are used, as this is the version on
+# MSYS (e.g., process substitution is not available there).
 
-kosports_status_installed=$(kosports status installed)
-kosports_status_available=$(kosports status available)
+# Read DreamSDK version information (the VERSION file uses CRLF)
+dreamsdk_release="(Unknown Release)"
+dreamsdk_build=""
+dreamsdk_date=""
+dreamsdk_version_file="${DREAMSDK_BASE}/VERSION"
+if [ -f "${dreamsdk_version_file}" ]; then
+  while IFS='=' read -r name value || [ -n "${name}" ]; do
+    value="${value%$'\r'}"
+    case "${name%$'\r'}" in
+      "Release")     dreamsdk_release="${value}" ;;
+      "BuildNumber") dreamsdk_build="${value}" ;;
+      "Date")        dreamsdk_date="${value}" ;;
+    esac
+  done < "${dreamsdk_version_file}"
+fi
+
+# Retrieve KallistiOS Ports counts; both queries are run in parallel, each one
+# printing a tagged line, as the order of the lines is not guaranteed
+kosports_status=$(
+  echo "installed=$(kosports status installed)" &
+  echo "available=$(kosports status available)" &
+  wait
+)
+kosports_status_installed=""
+kosports_status_available=""
+while IFS='=' read -r name value; do
+  value="${value%$'\r'}"
+  case "${name}" in
+    "installed") kosports_status_installed="${value}" ;;
+    "available") kosports_status_available="${value}" ;;
+  esac
+done <<< "${kosports_status}"
 
 echo " ____                         _____  ____   _____ ";
 echo "|    .  ___  ___  ___  _____ |   __||    . |  |  |";
@@ -19,12 +50,14 @@ echo "Run \"dreamsdk\" for help with commands and usage.";
 
 if [ "${DREAMSDK_KOS_INITIALIZED:-0}" -eq 0 ]; then
   echo "";
-  echo -e "\033[1;33;1;41m*** WARNING: KallistiOS is not properly installed/initialized ***\033[0m"; 
+  echo -e "\033[1;33;1;41m*** WARNING: KallistiOS is not properly installed/initialized ***\033[0m";
   echo "Please run \"dreamsdk manage\" to fix the issue.";
 fi
 
 unset dreamsdk_release
 unset dreamsdk_build
 unset dreamsdk_date
+unset dreamsdk_version_file
+unset kosports_status
 unset kosports_status_installed
 unset kosports_status_available

@@ -6,8 +6,10 @@ if [ -z "${DREAMSDK_BASE}" ]; then
   exit 1
 fi
 
-# Convert parameter to lowercase
-param=$(echo "$1" | awk '{print tolower($0)}')
+# Pure Bash is used as much as possible in this script to avoid spawning
+# processes, as this is very slow on Windows and this script is called at shell
+# startup. Only Bash 3.1 features are used, as this is the version on MSYS.
+param="$1"
 
 # Validate parameter
 if [ -z "${param}" ]; then
@@ -15,15 +17,25 @@ if [ -z "${param}" ]; then
   exit 2
 fi
 
+# Parameter is case insensitive
+shopt -s nocasematch
 case "${param}" in
-  "--release"|"--build"|"--date")
-    # Valid parameter
+  "--release")
+    key="Release"
+    ;;
+  "--build")
+    key="BuildNumber"
+    ;;
+  "--date")
+    key="Date"
     ;;
   *)
+    param=$(echo "${param}" | awk '{print tolower($0)}')
     echo "fatal: invalid option: ${param}" >&2
     exit 3
     ;;
 esac
+shopt -u nocasematch
 
 # Version file path
 dreamsdk_version_file="${DREAMSDK_BASE}/VERSION"
@@ -34,15 +46,10 @@ if [ ! -f "${dreamsdk_version_file}" ]; then
   exit 4
 fi
 
-# Process according to parameter
-case "${param}" in
-  "--release")
-    awk -F "=" '/Release/ {print $2}' "${dreamsdk_version_file}"
-    ;;
-  "--build")
-    awk -F "=" '/BuildNumber/ {print $2}' "${dreamsdk_version_file}"
-    ;;
-  "--date")
-    awk -F "=" '/Date/ {print $2}' "${dreamsdk_version_file}"
-    ;;
-esac
+# Print the value of the requested key (the VERSION file uses CRLF)
+while IFS='=' read -r name value || [ -n "${name}" ]; do
+  if [ "${name%$'\r'}" = "${key}" ]; then
+    echo "${value%$'\r'}"
+    break
+  fi
+done < "${dreamsdk_version_file}"
