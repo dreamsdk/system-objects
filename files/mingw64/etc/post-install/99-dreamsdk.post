@@ -4,20 +4,17 @@ maybe_init_dreamsdk ()
   # better supported by pacman while upgrading packages
   _hide_useless_objects ()
   {
-    # File used to track the last known modification timestamp of pacman.log
+    # File whose modification time mirrors the one of pacman.log when the
+    # operation was last done
     local PACMAN_LOG="/var/log/pacman.log"
     local LASTDATEFILE="/etc/dreamsdk/pacman.stamp"
 
-    # If pacman.log is new or updated (i.e. newer than the stamp file), or does
-    # not exist at all, run the operation. This check uses Bash builtins only,
-    # as spawning processes is slow on Windows and this runs on each login.
-    if [[ ! -e "$PACMAN_LOG" || ! -f "$LASTDATEFILE" || "$PACMAN_LOG" -nt "$LASTDATEFILE" ]]; then
-      # Update the stored timestamp (format: YYYYMMDDHHMMSS), unless pacman.log
-      # doesn't exist: in that case, the operation is forced on each login
-      if [[ -e "$PACMAN_LOG" ]]; then
-        stat -c %y "$PACMAN_LOG" | awk '{print $1 $2}' | sed 's/[-:]//g' | cut -c1-14 > "$LASTDATEFILE"
-      fi
-
+    # If pacman.log is new or updated (i.e. its modification time differs from
+    # the stamp file), or does not exist at all, run the operation. Both "-nt"
+    # and "-ot" are checked, as reinstalling DreamSDK may restore an older
+    # pacman.log. This check uses Bash builtins only, as spawning processes is
+    # slow on Windows and this runs on each login.
+    if [[ ! -e "$PACMAN_LOG" || ! -f "$LASTDATEFILE" || "$PACMAN_LOG" -nt "$LASTDATEFILE" || "$PACMAN_LOG" -ot "$LASTDATEFILE" ]]; then
       # Hide MSYS2-related files and directories if they exist
       local USELESSOBJECTS=(
         "/autorebase.bat" "/msys2_shell.cmd"
@@ -35,6 +32,13 @@ maybe_init_dreamsdk ()
           attrib +h "$ELEMENT"
         fi
       done
+
+      # Copy the modification time of pacman.log to the stamp file, unless
+      # pacman.log doesn't exist: in that case, the operation is forced on each
+      # login
+      if [[ -e "$PACMAN_LOG" ]]; then
+        touch -r "$PACMAN_LOG" "$LASTDATEFILE"
+      fi
     fi
   }
   _hide_useless_objects
