@@ -1,13 +1,14 @@
 maybe_init_dreamsdk ()
 {
+  # File whose modification time mirrors the one of pacman.log when the useless
+  # MSYS2 directories/files were last hidden
+  local LASTDATEFILE="/etc/dreamsdk/pacman.stamp"
+
   # Hide useless MSYS2 directories/files but without removing them, as this is
   # better supported by pacman while upgrading packages
   _hide_useless_objects ()
   {
-    # File whose modification time mirrors the one of pacman.log when the
-    # operation was last done
     local PACMAN_LOG="/var/log/pacman.log"
-    local LASTDATEFILE="/etc/dreamsdk/pacman.stamp"
 
     # If pacman.log is new or updated (i.e. its modification time differs from
     # the stamp file), or does not exist at all, run the operation. Both "-nt"
@@ -64,6 +65,10 @@ maybe_init_dreamsdk ()
   if _file_contains "${PROFILEFILE}" "{MSYS2_PATH_TYPE:-minimal}";
   then
     sed -i 's/{MSYS2_PATH_TYPE:-minimal}/{MSYS2_PATH_TYPE:-inherit}/' "${PROFILEFILE}"
+    # DreamSDK was just (re)installed: reinstalling the same version restores
+    # pacman.log with the same modification time, so force hiding the useless
+    # MSYS2 directories/files on the next login
+    rm -f "$LASTDATEFILE"
     # This is not really nice, as this will close the shell the first time
     logout
   fi
