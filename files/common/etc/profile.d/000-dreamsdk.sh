@@ -141,6 +141,12 @@ fi\n
 if [ -n \"$_WORKING_DIRECTORY\" ]; then\n
   cd \"$_WORKING_DIRECTORY\"\n
 fi\n
+if [ -n \"$_EXTERNAL_COMMAND_NAME\" ]; then\n
+  command_not_found_handle() {\n
+    echo \"$_EXTERNAL_COMMAND_NAME: \$1: command not found\" >&2\n
+    return 127\n
+  }\n
+fi\n
 \n
 $_EXTERNAL_COMMAND\n
 "
