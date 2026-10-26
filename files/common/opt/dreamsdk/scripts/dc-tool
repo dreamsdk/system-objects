@@ -2,17 +2,29 @@
 
 if [ -z "${DREAMSDK_BASE_TOOLCHAINS}" ]; then
   echo "fatal: \$DREAMSDK_BASE_TOOLCHAINS is undefined!";
-  exit;
+  exit 1;
 fi
 
+if [ ! -f "${DREAMSDK_CFG_DCTOOL}" ]; then
+  echo "fatal: Dreamcast Tool configuration file not found: \"${DREAMSDK_CFG_DCTOOL}\"";
+  exit 1;
+fi
+
+# Read a dc-tool parameter: the key must match exactly (e.g.,
+# "MediaAccessControlAddress" vs. "HostMediaAccessControlAddress"), the value
+# may contain "=" and the file may have CRLF line endings
+get_parameter() {
+  awk -v key="$1" '{ sub(/\r$/, ""); } index($0, key "=") == 1 { print substr($0, length(key) + 2); exit; }' "${DREAMSDK_CFG_DCTOOL}"
+}
+
 # Get dc-tool parameters
-kind=$(awk -F "=" '/Kind/ {print $2;}' ${DREAMSDK_CFG_DCTOOL})
-executable=$(awk -F "=" '/Executable/ {print $2;}' ${DREAMSDK_CFG_DCTOOL})
-commandline=$(awk -F "=" '/CommandLine/ {print $2;}' ${DREAMSDK_CFG_DCTOOL})
-dreamcast_ip=$(awk -F "=" '/InternetProtocolAddress/ {print $2;}' ${DREAMSDK_CFG_DCTOOL})
-dreamcast_mac=$(awk -F "=" '/MediaAccessControlAddress/ {print $2;}' ${DREAMSDK_CFG_DCTOOL})
-host_mac=$(awk -F "=" '/HostMediaAccessControlAddress/ {print $2;}' ${DREAMSDK_CFG_DCTOOL})
-use_arp=$(awk -F "=" '/MediaAccessControlEnabled/ {print $2;}' ${DREAMSDK_CFG_DCTOOL})
+kind=$(get_parameter Kind)
+executable=$(get_parameter Executable)
+commandline=$(get_parameter CommandLine)
+dreamcast_ip=$(get_parameter InternetProtocolAddress)
+dreamcast_mac=$(get_parameter MediaAccessControlAddress)
+host_mac=$(get_parameter HostMediaAccessControlAddress)
+use_arp=$(get_parameter MediaAccessControlEnabled)
 
 dreamcast_tool_not_configured() {
   echo "Dreamcast Tool (dc-tool) is not configured."
