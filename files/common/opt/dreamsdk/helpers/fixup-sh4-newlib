@@ -31,17 +31,17 @@ if [ -n "$VERBOSE" ]; then
     echo "Copying KallistiOS headers in Newlib...";
 fi
 cp -r $kos_base/include/kos $newlib_inc
-cp -r $kos_base/kernel/arch/dreamcast/include/arch $newlib_inc
-cp -r $kos_base/kernel/arch/dreamcast/include/dc $newlib_inc
 
-# These instructions are just fail-safes, as in the original dc-chain Makefile,
-# they are already "cp" instructions.
+# These instructions are just fail-safes, as in the original kos-chain
+# Makefile (scripts/newlib.mk), they are already "cp" instructions.
 if [ -n "$VERBOSE" ]; then
-    echo "Copying pthread headers in Newlib...";
+    echo "Copying pthread, dirent and time headers in Newlib...";
 fi
+mkdir -p $newlib_inc/sys $newlib_inc/machine
 cp $kos_base/include/pthread.h $newlib_inc
-cp $kos_base/include/sys/_pthread.h $newlib_inc/sys
-cp $kos_base/include/sys/sched.h $newlib_inc/sys
+cp $kos_base/include/sys/_pthreadtypes.h $newlib_inc/sys
+cp $kos_base/include/sys/dirent.h $newlib_inc/sys
+cp $kos_base/include/machine/time.h $newlib_inc/machine
 
 if [ -n "$VERBOSE" ]; then
     echo "Done!";
